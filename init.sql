@@ -47,11 +47,11 @@ CREATE TABLE "references" (
 );
 
 INSERT INTO employees (first_name, last_name, email, department, hire_date, profile_image_url) VALUES
-('Alex', 'Mercer', 'alex.mercer@company.com', 'Engineering', '2024-01-15', 'https://i.pravatar.cc/150?u=alex.mercer@company.com'),
-('Maya', 'Lin', 'maya.lin@company.com', 'Data Science', '2024-03-22', 'https://i.pravatar.cc/150?u=maya.lin@company.com'),
-('David', 'Kim', 'david.kim@company.com', 'Cybersecurity', '2025-05-10', 'https://i.pravatar.cc/150?u=david.kim@company.com'),
-('Sarah', 'Alami', 'sarah.alami@company.com', 'Engineering', '2025-08-01', 'https://i.pravatar.cc/150?u=sarah.alami@company.com'),
-('James', 'OConnor', 'james.oconnor@company.com', 'Cloud Architecture', '2026-02-14', 'https://i.pravatar.cc/150?u=james.oconnor@company.com');
+('Augustin', 'Morval', 'amorval@diametral.com', 'Engineering', '2024-01-15', 'https://media.licdn.com/dms/image/v2/D5603AQFha8Wn3UhTHQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1673342053855?e=1784160000&v=beta&t=zb5yxFR0CHBv927E98oXpGdhW3L85jJbhG1OpljuDwA'),
+('Alexandre', 'Bidon', 'abidon@diametral.com', 'Data Science', '2024-03-22', 'https://media.licdn.com/dms/image/v2/D4E03AQFebzOKI_dJvw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1680554817903?e=1784160000&v=beta&t=UQVh4Vud_6D6A_WEPqdu7rgtgx5jqMb1txeXE9PlY8Q'),
+('Qifan', 'Zhang', 'qzhan@diametral.com', 'Cybersecurity', '2025-05-10', 'https://media.licdn.com/dms/image/v2/D4E03AQHAiZc08t7j-w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1678718043840?e=1784160000&v=beta&t=a0I2OE2Usx4X2OOR1ENvMXXnDw2UFWFQdulKEQb7zR4'),
+('Samuel', 'Goutin', 'sgoutin@diametral.com', 'Engineering', '2025-08-01', 'https://media.licdn.com/dms/image/v2/D5603AQETthag2zkIFA/profile-displayphoto-shrink_800_800/B56ZSQEfKfGoAc-/0/1737583884138?e=1784160000&v=beta&t=RCsj6dviy91AkYIsXHP6KPT0QcH9DTSK-PEhsdhx-iQ'),
+('Antoine', 'Espinosa', 'aespinosa@diametral.com', 'Cloud Architecture', '2026-02-14', 'https://i.pravatar.cc/150?u=james.oconnor@company.com');
 
 INSERT INTO clients (company_name, contact_name, email, phone, address, sector) VALUES
 ('Apex Health Solutions', 'Dr. Robert Chen', 'r.chen@apexhealth.com', '+1-555-0192', '123 Medical Plaza, Boston, MA', 'Healthcare'),
