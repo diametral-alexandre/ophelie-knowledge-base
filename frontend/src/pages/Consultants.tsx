@@ -111,6 +111,12 @@ export default function Consultants() {
               sortable: true,
               render: (c) => c.hire_date ?? "—",
             },
+            {
+              key: "status",
+              header: "Status",
+              sortable: true,
+              render: (c) => c.status ?? "—",
+            },
           ]}
         />
       )}

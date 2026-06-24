@@ -1,0 +1,60 @@
+# Pre-commit gates for the Ophélie knowledge base.
+# Install once per clone:  pip install pre-commit && pre-commit install   (or: make setup)
+# Bump pinned revs with:    pre-commit autoupdate
+#
+# Two stages:
+#  - pre-commit (fast, changed files only): ruff lint+format on backend, tsc on
+#    edited frontend files, baseline hygiene.
+#  - pre-push (slower, whole tree): full `tsc -b` project type-check and a
+#    full-tree ruff lint — catches cross-file breakage that per-file commit
+#    checks miss before code is shared.
+default_install_hook_types: [pre-commit, pre-push]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+        # TS tsconfig files are JSONC (they allow // comments) — not strict JSON.
+        exclude: (^|/)tsconfig(\..+)?\.json$
+      - id: check-merge-conflict
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.19
+    hooks:
+      - id: ruff-check      # lint (autofix)
+        args: [--fix]
+        files: ^backend/
+      - id: ruff-format     # format
+        files: ^backend/
+      # pre-push: lint the whole backend (not just changed files), reusing the
+      # managed ruff env so no system install is required.
+      - id: ruff-check
+        alias: ruff-check-all
+        name: ruff check (full backend, pre-push)
+        args: [backend]
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+
+  - repo: local
+    hooks:
+      - id: tsc-frontend
+        name: tsc --noEmit (frontend)
+        entry: bash -c 'cd frontend && npx --no-install tsc -p tsconfig.json --noEmit'
+        language: system
+        files: ^frontend/.*\.(ts|tsx)$
+        pass_filenames: false
+      # pre-push: full project type-check (tsc -b walks all referenced configs),
+      # catching cross-file type breakage the per-file commit check can miss.
+      - id: tsc-build-frontend
+        name: tsc -b (frontend, full project, pre-push)
+        entry: bash -c 'cd frontend && npx --no-install tsc -b'
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

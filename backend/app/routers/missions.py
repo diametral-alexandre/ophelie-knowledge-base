@@ -60,7 +60,9 @@ def get_mission_references(mission_id: int, db: DB):
     return [ReferenceRowOut.model_validate(dict(r)) for r in rows]
 
 
-@router.patch("/{mission_id}", response_model=MissionOut, dependencies=[Depends(require_role("admin"))])
+@router.patch(
+    "/{mission_id}", response_model=MissionOut, dependencies=[Depends(require_role("admin"))]
+)
 def update_mission(mission_id: int, payload: MissionUpdate, db: DB) -> Mission:
     mission = _get_or_404(mission_id, db)
     for key, value in payload.model_dump(exclude_unset=True).items():
@@ -70,7 +72,11 @@ def update_mission(mission_id: int, payload: MissionUpdate, db: DB) -> Mission:
     return mission
 
 
-@router.delete("/{mission_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_role("admin"))])
+@router.delete(
+    "/{mission_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_role("admin"))],
+)
 def delete_mission(mission_id: int, db: DB) -> None:
     mission = _get_or_404(mission_id, db)
     db.delete(mission)

@@ -6,6 +6,7 @@ export interface Employee {
   department: string | null;
   hire_date: string | null;
   profile_image_url: string | null;
+  status: string | null;
 }
 
 export interface Client {

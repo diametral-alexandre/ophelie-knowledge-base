@@ -48,7 +48,11 @@ def list_references(db: DB):
     return [ReferenceListOut.model_validate(dict(r)) for r in rows]
 
 
-@router.patch("/{reference_id}", response_model=ReferenceOut, dependencies=[Depends(require_role("admin"))])
+@router.patch(
+    "/{reference_id}",
+    response_model=ReferenceOut,
+    dependencies=[Depends(require_role("admin"))],
+)
 def update_reference(reference_id: int, payload: ReferenceUpdate, db: DB) -> Reference:
     reference = _get_or_404(reference_id, db)
     for key, value in payload.model_dump(exclude_unset=True).items():
@@ -58,7 +62,11 @@ def update_reference(reference_id: int, payload: ReferenceUpdate, db: DB) -> Ref
     return reference
 
 
-@router.delete("/{reference_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_role("admin"))])
+@router.delete(
+    "/{reference_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_role("admin"))],
+)
 def delete_reference(reference_id: int, db: DB) -> None:
     reference = _get_or_404(reference_id, db)
     db.delete(reference)

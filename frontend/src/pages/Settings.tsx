@@ -80,7 +80,7 @@ export default function Settings() {
                   gap: 16,
                   padding: "12px 0",
                   borderBottom:
-                    i < NOTIF_ROWS.length - 1 ? "1px solid var(--ds-border)" : "none",
+                    i < NOTIF_ROWS.length - 1 ? "1px solid var(--ds-rule)" : "none",
                 }}
               >
                 <div>

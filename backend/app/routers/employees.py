@@ -66,7 +66,11 @@ def update_employee(employee_id: int, payload: EmployeeUpdate, db: DB) -> Employ
     return employee
 
 
-@router.delete("/{employee_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_role("admin"))])
+@router.delete(
+    "/{employee_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_role("admin"))],
+)
 def delete_employee(employee_id: int, db: DB) -> None:
     employee = _get_or_404(employee_id, db)
     db.delete(employee)

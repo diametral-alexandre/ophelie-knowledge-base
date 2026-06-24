@@ -1,4 +1,11 @@
-.PHONY: up down logs build restart clean ps
+.PHONY: setup up down logs build restart clean ps
+
+setup:         ## One-time dev setup: pre-commit hooks, frontend deps, Playwright browsers
+	@command -v pre-commit >/dev/null 2>&1 || { echo ">> installing pre-commit"; pip install --user pre-commit; }
+	pre-commit install
+	cd frontend && npm install
+	npx -y playwright install chromium
+	@echo ">> setup complete. The Playwright + context7 MCP servers start on demand (see .mcp.json)."
 
 up:            ## Build (if needed) and start the whole stack
 	docker compose up --build
