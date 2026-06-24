@@ -20,14 +20,21 @@
     monospace;
   --oph-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
   --oph-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.08);
-  --oph-shadow-pop: 0 8px 32px rgba(0, 0, 0, 0.14);
   --oph-topbar-h: 61px;
+  /* Rail width — single source of truth for the grid column and the rail
+     itself, flipped by `.collapsed` so both reflow in lockstep (shadcn's
+     --sidebar-width trick). */
+  --oph-sidebar-w: 232px;
 
   display: grid;
-  grid-template-columns: 232px 1fr;
+  grid-template-columns: var(--oph-sidebar-w) 1fr;
   grid-template-rows: auto 1fr;
   min-height: 100vh;
   background: var(--ds-bg);
+  transition: grid-template-columns 180ms ease;
+}
+.oph-app.collapsed {
+  --oph-sidebar-w: 64px;
 }
 
 /* ── Sidebar (row 2, col 1 — sticky beneath the full-width topbar) ─────────── */
@@ -48,10 +55,29 @@
   gap: 2px;
 }
 .oph-nav-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 0;
+  background: none;
+  font-family: inherit;
   font-size: 11px;
   font-weight: 500;
   color: var(--ds-ink-faint);
   padding: 12px 10px 4px;
+  cursor: pointer;
+  transition: color 80ms ease;
+}
+.oph-nav-group:hover {
+  color: var(--ds-ink-soft);
+}
+.oph-group-chevron {
+  display: flex;
+  transition: transform 150ms ease;
+}
+.oph-nav-group.closed .oph-group-chevron {
+  transform: rotate(-90deg);
 }
 .oph-nav-item {
   position: relative;
@@ -90,16 +116,42 @@
   display: flex;
   flex-shrink: 0;
 }
-.oph-nav-count {
-  margin-left: auto;
-  font-size: 11px;
+
+/* Rail foot (collapse toggle) — pushed to the bottom; the user widget sits
+   directly beneath it. */
+.oph-rail-foot {
+  margin-top: auto;
+  padding: 4px 12px 6px;
+}
+.oph-collapse-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
   color: var(--ds-ink-faint);
-  font-variant-numeric: tabular-nums;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 80ms ease, color 80ms ease;
+}
+.oph-collapse-btn:hover {
+  background: color-mix(in srgb, var(--ds-ink) 5%, transparent);
+  color: var(--ds-ink);
+}
+.oph-collapse-icon {
+  transition: transform 180ms ease;
+}
+.oph-app.collapsed .oph-collapse-icon {
+  transform: rotate(180deg);
 }
 
 /* User menu pinned to the bottom of the rail */
 .oph-user {
-  margin-top: auto;
   position: relative;
   box-shadow: 0 -1px 0 var(--ds-rule);
 }
@@ -134,18 +186,6 @@
 .oph-user-toggle:hover {
   background: color-mix(in srgb, var(--ds-ink) 4%, transparent);
 }
-.oph-avatar {
-  width: 30px;
-  height: 30px;
-  border-radius: 999px;
-  background: var(--ds-accent);
-  color: var(--ds-on-accent, #fff);
-  display: grid;
-  place-items: center;
-  font-size: 12px;
-  font-weight: 500;
-  flex-shrink: 0;
-}
 .oph-user-name {
   font-weight: 500;
   font-size: 13px;
@@ -155,38 +195,84 @@
   font-size: 11px;
   color: var(--ds-ink-faint);
 }
+/* Positioning only — the surface/items come from Diametral's .ds-menu. */
 .oph-menu {
   position: absolute;
   bottom: 100%;
   left: 0;
   right: 0;
   margin: 8px;
-  background: var(--ds-surface);
-  border: 1px solid var(--ds-rule);
+}
+
+/* ── Collapsed rail (icon-only mode) ───────────────────────────────────────
+   Driven by `.oph-app.collapsed`. Labels/headers/text collapse out; icons
+   centre; hover tooltips stand in for the hidden labels. */
+.oph-app.collapsed .oph-nav {
+  padding: 8px;
+}
+.oph-app.collapsed .oph-nav-item,
+.oph-app.collapsed .oph-collapse-btn {
+  justify-content: center;
+  gap: 0;
+  padding: 8px;
+}
+.oph-app.collapsed .oph-nav-label,
+.oph-app.collapsed .oph-user-text,
+.oph-app.collapsed .oph-user-toggle {
+  display: none;
+}
+.oph-app.collapsed .oph-rail-foot {
+  padding: 4px 8px 6px;
+}
+.oph-app.collapsed .oph-user-main {
+  justify-content: center;
+  padding: 14px 0;
+}
+/* The drop-up can't fit a 64px rail — pop it out to the side instead. */
+.oph-app.collapsed .oph-menu {
+  left: calc(100% - 4px);
+  right: auto;
+  bottom: 6px;
+  width: 200px;
+}
+
+/* Hover tooltips that replace the labels while collapsed (the accessible name
+   stays on the button via aria-label). Inverted ink-on-bg so it reads against
+   the rail under every theme. */
+.oph-app.collapsed .oph-nav-item::after,
+.oph-app.collapsed .oph-collapse-btn::after {
+  content: attr(data-label);
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%) scale(0.96);
+  transform-origin: left center;
+  white-space: nowrap;
+  background: var(--ds-ink);
+  color: var(--ds-bg);
+  padding: 4px 9px;
   border-radius: 6px;
-  box-shadow: var(--oph-shadow-pop);
-  overflow: hidden;
-  z-index: 30;
+  font-size: 12px;
+  box-shadow: var(--oph-shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 100ms ease, transform 100ms ease;
+  z-index: 50;
 }
-.oph-menu-item {
-  width: 100%;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 0;
-  background: none;
-  font-size: 13px;
-  color: var(--ds-ink-soft);
-  text-align: left;
-  cursor: pointer;
+.oph-app.collapsed .oph-nav-item:hover::after,
+.oph-app.collapsed .oph-collapse-btn:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
 }
-.oph-menu-item:hover {
-  background: var(--ds-bg-alt);
-}
-.oph-menu-item.danger {
-  color: var(--ds-danger, #b4453a);
-  border-top: 1px solid var(--ds-rule);
+
+@media (prefers-reduced-motion: reduce) {
+  .oph-app,
+  .oph-collapse-icon,
+  .oph-group-chevron,
+  .oph-app.collapsed .oph-nav-item::after,
+  .oph-app.collapsed .oph-collapse-btn::after {
+    transition: none;
+  }
 }
 
 /* ── Main column (row 2, col 2) ────────────────────────────────────────────── */
@@ -225,7 +311,7 @@
 }
 .oph-brand-word {
   font-family: var(--ds-font-title, serif);
-  font-style: italic;
+  font-style: normal;
   font-size: 22px;
   line-height: 1;
   color: var(--ds-ink);
@@ -327,17 +413,6 @@
 .oph-search-clear:hover {
   color: var(--ds-ink);
 }
-.oph-kbd {
-  font-family: var(--oph-font-mono);
-  font-size: 10.5px;
-  padding: 2px 6px;
-  background: var(--ds-bg-alt);
-  border: 1px solid var(--ds-rule);
-  border-radius: 4px;
-  color: var(--ds-ink-soft);
-  white-space: nowrap;
-}
-
 .oph-search-pop {
   position: absolute;
   top: calc(100% + 6px);
@@ -372,23 +447,15 @@
   font-size: 10.5px;
   color: var(--ds-ink-faint);
 }
+/* .ds-chips handles the row; only the inset padding is shell-specific. */
 .oph-recent-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
   padding: 4px 14px 10px;
 }
+/* .ds-chip provides the surface; add the click affordance for recent terms. */
 .oph-recent-chip {
-  padding: 4px 10px;
-  border: 1px solid var(--ds-rule);
-  border-radius: 999px;
-  background: var(--ds-bg-alt);
-  color: var(--ds-ink-soft);
-  font-size: 12px;
   cursor: pointer;
 }
 .oph-recent-chip:hover {
-  border-color: var(--ds-ink-faint);
   color: var(--ds-ink);
 }
 .oph-opt {
@@ -445,15 +512,11 @@
   color: var(--ds-ink-faint);
   flex-shrink: 0;
 }
+/* .ds-kbd gives the bordered mono tile; these set it apart as a kind label. */
 .oph-opt-kind {
-  font-family: var(--oph-font-mono);
-  font-size: 10px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ds-ink-faint);
-  padding: 2px 6px;
-  border: 1px solid var(--ds-rule);
-  border-radius: 4px;
   flex-shrink: 0;
 }
 .oph-hl {

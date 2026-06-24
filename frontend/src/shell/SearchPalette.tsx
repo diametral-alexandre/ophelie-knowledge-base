@@ -351,7 +351,7 @@ export function SearchPalette({ placeholder = "Search…" }: { placeholder?: str
             <Icon name="x" size={12} />
           </button>
         )}
-        <span className="oph-kbd">{MOD} K</span>
+        <span className="ds-kbd">{MOD} K</span>
       </div>
 
       {open && (
@@ -373,12 +373,12 @@ export function SearchPalette({ placeholder = "Search…" }: { placeholder?: str
                   Clear
                 </button>
               </div>
-              <div className="oph-recent-chips">
+              <div className="ds-chips oph-recent-chips">
                 {recent.map((r) => (
                   <button
                     key={r}
                     type="button"
-                    className="oph-recent-chip"
+                    className="ds-chip oph-recent-chip"
                     onClick={() => {
                       setQ(r);
                       inputRef.current?.focus();
@@ -425,7 +425,7 @@ export function SearchPalette({ placeholder = "Search…" }: { placeholder?: str
                         {hit.sub && <span className="oph-opt-sub">{hit.sub}</span>}
                       </span>
                       {hit.meta && <span className="oph-opt-meta">{hit.meta}</span>}
-                      <span className="oph-opt-kind">{KIND_LABEL[hit.kind]}</span>
+                      <span className="ds-kbd oph-opt-kind">{KIND_LABEL[hit.kind]}</span>
                     </button>
                   ))}
                 </div>
@@ -435,13 +435,13 @@ export function SearchPalette({ placeholder = "Search…" }: { placeholder?: str
 
           <div className="oph-search-foot">
             <span>
-              <span className="oph-kbd">↑</span> <span className="oph-kbd">↓</span> navigate
+              <span className="ds-kbd">↑</span> <span className="ds-kbd">↓</span> navigate
             </span>
             <span>
-              <span className="oph-kbd">↵</span> open
+              <span className="ds-kbd">↵</span> open
             </span>
             <span>
-              <span className="oph-kbd">esc</span> close
+              <span className="ds-kbd">esc</span> close
             </span>
           </div>
         </div>
