@@ -5,10 +5,21 @@ this file is the dense, actionable version. Keep it accurate when things change.
 
 ## What this is
 
-A hackathon starter ("whiteapp"): a **React + Diametral design system** frontend,
-a **FastAPI** backend, **Keycloak** auth, and **two Postgres** DBs — everything
-comes up with one `docker compose up`. Keycloak's login/emails are themed with
-Diametral too.
+The **Ophélie knowledge base** — a consulting-firm Library (consultants,
+references/missions, clients, offers) built on a hackathon "whiteapp" starter: a
+**React + Diametral design system** frontend, a **FastAPI** backend, **Keycloak**
+auth, and **two Postgres** DBs — everything comes up with one
+`docker compose up`. Keycloak's login/emails are themed with Diametral too.
+
+**Where the product actually lives today:** the frontend is the Ophélie product
+and owns its data **client-side** — the Library is seeded in `frontend/src/data/`
+(no backend behind it yet, see `data/types.ts`). The **backend is still the
+starter's generic `Item` API**; it has not been ported to the consulting domain.
+When wiring real persistence, the domain model in `src/data/types.ts`
+(`Consultant`, `Reference`, `Client`) is the source of truth to port backward.
+
+Sub-area guides (nested `CLAUDE.md`): [`frontend/CLAUDE.md`](frontend/CLAUDE.md),
+[`backend/CLAUDE.md`](backend/CLAUDE.md), [`keycloak/CLAUDE.md`](keycloak/CLAUDE.md).
 
 ## Run & iterate
 
@@ -27,8 +38,12 @@ Diametral too.
 ## Layout
 
 - `frontend/` — Vite + React + TS. `src/main.tsx` (Keycloak init gate → render),
-  `src/App.tsx` (`ConsoleLayout` shell + routes), `src/pages/`, and `src/lib/`
-  (`keycloak.ts`, `api.ts` = token-injecting fetch, `config.ts`, `types.ts`).
+  `src/App.tsx` (`ConsoleLayout` shell + `ROUTES`/`NAV` + routes), `src/pages/`
+  (Consultants, References, Clients, Offers + their `*Detail` pages, Settings,
+  Profile), `src/lib/` (`keycloak.ts`, `api.ts` = token-injecting fetch,
+  `config.ts`, `currentUser.ts`, `resourceUi.tsx`, `types.ts`), and **`src/data/`**
+  — the **client-owned Library seed** (`consultants.ts`, `references.ts`,
+  `types.ts`); the MVP's only source of truth. See `frontend/CLAUDE.md`.
 - `backend/` — FastAPI. `app/main.py` (app factory, CORS, `create_all`),
   **`app/auth.py`** (Keycloak JWT validation — the core), `app/config.py`
   (pydantic-settings), `app/database.py`, `app/models.py`, `app/schemas.py`,
@@ -77,6 +92,19 @@ Diametral too.
 - **Model change**: edit `app/models.py`. Tables are `create_all`'d on startup
   (no Alembic), so a schema change only applies on a fresh DB — `make clean` to
   recreate app-db. Introduce Alembic before the schema matters.
+
+## Code review (subagents)
+
+This repo ships **local, committed** reviewers in `.claude/agents/` (tailored to
+this stack — no plugin install required, so every clone has them):
+
+- **`security-reviewer`** — required for any change touching `backend/app/auth.py`
+  (JWKS validation, the internal/public URL split, audience, role gating). The
+  repo's sharpest security surface.
+- **`fastapi-reviewer`** — for backend router/schema/async/main.py changes.
+
+Invoke them with the Task tool (e.g. "use the security-reviewer agent on
+auth.py"). They were seeded from the `ecc` marketplace and then tailored.
 
 ## Verify (smoke test) — see also `/smoke`
 
