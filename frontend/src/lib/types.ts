@@ -17,6 +17,7 @@ export interface Client {
   address: string | null;
   created_at: string;
   sector: string | null;
+  logo_url: string | null;
 }
 
 export interface Mission {

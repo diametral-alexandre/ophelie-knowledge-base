@@ -11,6 +11,58 @@ import {
 import { api } from "../lib/api";
 import type { Client } from "../lib/types";
 
+function ClientLogo({ src, name }: { src: string | null; name: string }) {
+  const initials = name
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={name}
+        style={{
+          width: 32,
+          height: 32,
+          objectFit: "contain",
+          borderRadius: 4,
+          border: "1px solid var(--ds-border)",
+          background: "#fff",
+          padding: 2,
+          flexShrink: 0,
+        }}
+        onError={(e) => {
+          (e.currentTarget as HTMLImageElement).style.display = "none";
+        }}
+      />
+    );
+  }
+
+  return (
+    <div
+      style={{
+        width: 32,
+        height: 32,
+        borderRadius: 4,
+        background: "var(--ds-surface-raised)",
+        border: "1px solid var(--ds-border)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 11,
+        fontWeight: 600,
+        color: "var(--ds-ink-soft)",
+        flexShrink: 0,
+      }}
+    >
+      {initials}
+    </div>
+  );
+}
+
 export default function Clients() {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,7 +130,7 @@ export default function Clients() {
       ) : (
         <DataGrid<Client>
           rows={rows}
-          rowKey={(c) => c.client_id}
+          rowKey={(c) => c.customer_id}
           pageSize={rows.length}
           columns={[
             {
@@ -86,14 +138,17 @@ export default function Clients() {
               header: "Client",
               render: (c) => (
                 <Link
-                  to={`/clients/${c.client_id}`}
+                  to={`/clients/${c.customer_id}`}
                   style={{
                     color: "inherit",
                     textDecoration: "none",
-                    fontWeight: 500,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
                   }}
                 >
-                  {c.company_name}
+                  <ClientLogo src={c.logo_url} name={c.company_name} />
+                  <span style={{ fontWeight: 500 }}>{c.company_name}</span>
                 </Link>
               ),
             },

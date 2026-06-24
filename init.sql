@@ -9,25 +9,26 @@ CREATE TABLE employees (
 );
 
 CREATE TABLE clients (
-    client_id SERIAL PRIMARY KEY,
+    customer_id SERIAL PRIMARY KEY,
     company_name VARCHAR(100) NOT NULL,
     contact_name VARCHAR(100),
     email VARCHAR(100) UNIQUE,
     phone VARCHAR(20),
     address TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    sector VARCHAR(30)
+    sector VARCHAR(30),
+    logo_url VARCHAR(500)
 );
 
 CREATE TABLE missions (
     mission_id SERIAL PRIMARY KEY,
-    client_id INT NOT NULL,
+    customer_id INT NOT NULL,
     mission_name VARCHAR(150) NOT NULL,
     description TEXT,
     start_date DATE,
     end_date DATE,
     status VARCHAR(20) DEFAULT 'In Progress',
-    FOREIGN KEY (client_id) REFERENCES clients(client_id) ON DELETE RESTRICT
+    FOREIGN KEY (customer_id) REFERENCES clients(customer_id) ON DELETE RESTRICT
 );
 
 CREATE TABLE skills (
@@ -47,19 +48,19 @@ CREATE TABLE "references" (
 );
 
 INSERT INTO employees (first_name, last_name, email, department, hire_date, profile_image_url) VALUES
-('Augustin', 'Morval', 'amorval@diametral.com', 'Engineering', '2024-01-15', 'https://media.licdn.com/dms/image/v2/D5603AQFha8Wn3UhTHQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1673342053855?e=1784160000&v=beta&t=zb5yxFR0CHBv927E98oXpGdhW3L85jJbhG1OpljuDwA'),
-('Alexandre', 'Bidon', 'abidon@diametral.com', 'Data Science', '2024-03-22', 'https://media.licdn.com/dms/image/v2/D4E03AQFebzOKI_dJvw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1680554817903?e=1784160000&v=beta&t=UQVh4Vud_6D6A_WEPqdu7rgtgx5jqMb1txeXE9PlY8Q'),
-('Qifan', 'Zhang', 'qzhan@diametral.com', 'Cybersecurity', '2025-05-10', 'https://media.licdn.com/dms/image/v2/D4E03AQHAiZc08t7j-w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1678718043840?e=1784160000&v=beta&t=a0I2OE2Usx4X2OOR1ENvMXXnDw2UFWFQdulKEQb7zR4'),
-('Samuel', 'Goutin', 'sgoutin@diametral.com', 'Engineering', '2025-08-01', 'https://media.licdn.com/dms/image/v2/D5603AQETthag2zkIFA/profile-displayphoto-shrink_800_800/B56ZSQEfKfGoAc-/0/1737583884138?e=1784160000&v=beta&t=RCsj6dviy91AkYIsXHP6KPT0QcH9DTSK-PEhsdhx-iQ'),
-('Benjamin', 'Dempouge', 'bdemouge@diametral.com', 'Cloud Architecture', '2026-02-14', 'https://i.pravatar.cc/150?u=james.oconnor@company.com');
+('Augustin', 'Morval', 'amorval@diametral.com', 'Applied AI and Data Science', '2024-01-15', 'https://media.licdn.com/dms/image/v2/D5603AQFha8Wn3UhTHQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1673342053855?e=1784160000&v=beta&t=zb5yxFR0CHBv927E98oXpGdhW3L85jJbhG1OpljuDwA'),
+('Alexandre', 'Bidon', 'abidon@diametral.com', 'Architecture and Engineering', '2024-03-22', 'https://media.licdn.com/dms/image/v2/D4E03AQFebzOKI_dJvw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1680554817903?e=1784160000&v=beta&t=UQVh4Vud_6D6A_WEPqdu7rgtgx5jqMb1txeXE9PlY8Q'),
+('Qifan', 'Zhang', 'qzhan@diametral.com', 'Product Delivery', '2025-05-10', 'https://media.licdn.com/dms/image/v2/D4E03AQHAiZc08t7j-w/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1678718043840?e=1784160000&v=beta&t=a0I2OE2Usx4X2OOR1ENvMXXnDw2UFWFQdulKEQb7zR4'),
+('Samuel', 'Goutin', 'sgoutin@diametral.com', 'Architecture and Engineering', '2025-08-01', 'https://media.licdn.com/dms/image/v2/D5603AQETthag2zkIFA/profile-displayphoto-shrink_800_800/B56ZSQEfKfGoAc-/0/1737583884138?e=1784160000&v=beta&t=RCsj6dviy91AkYIsXHP6KPT0QcH9DTSK-PEhsdhx-iQ'),
+('Benjamin', 'Dempouge', 'bdemouge@diametral.com', 'Applied AI and Data Science', '2026-02-14', 'https://media.licdn.com/dms/image/v2/C4E03AQFKWRHPpb0oMQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1651131831803?e=1784160000&v=beta&t=1q-SVzre1l2gVm8hgYNyBcHji5w5CCNFS8i8vPc9IZU');
 
-INSERT INTO clients (company_name, contact_name, email, phone, address, sector) VALUES
-('ACOR', 'Dr. Robert Chen', 'r.chen@apexhealth.com', '+1-555-0192', '123 Medical Plaza, Boston, MA', 'Healthcare'),
-('Société Générale', 'Elena Rostova', 'e.rostova@fintechglobal.com', '+1-555-4831', '77 Wall Street, New York, NY', 'Finance'),
-('INA', 'Yasser Jequirim', 'e.rostova@fintechglobal.com', '+1-555-4831', 'Bry', 'Media'),
-('ALLIANZ', 'Marcus Vance', 'm.vance@greenpulse.io', '+1-555-8902', '456 Renewable Way, Austin, TX', 'Energy');
+INSERT INTO clients (company_name, contact_name, email, phone, address, sector, logo_url) VALUES
+('ACOR', 'Dr. Robert Chen', 'r.chen@apexhealth.com', '+1-555-0192', '123 Medical Plaza, Boston, MA', 'Healthcare', NULL),
+('Société Générale', 'Elena Rostova', 'e.rostova@fintechglobal.com', '+1-555-4831', '77 Wall Street, New York, NY', 'Finance', 'https://logo.clearbit.com/societegenerale.com'),
+('INA', 'Yasser Jequirim', 'y.jequirim@ina.fr', '+33-1-49-83-20-00', 'Bry-sur-Marne, France', 'Media', 'https://logo.clearbit.com/ina.fr'),
+('ALLIANZ', 'Marcus Vance', 'm.vance@allianz.com', '+49-89-3800-0', 'Königinstraße 28, Munich, Germany', 'Energy', 'https://logo.clearbit.com/allianz.com');
 
-INSERT INTO missions (client_id, mission_name, description, start_date, end_date, status) VALUES
+INSERT INTO missions (customer_id, mission_name, description, start_date, end_date, status) VALUES
 (1, 'Patient Portal Upgrade', 'Migrating the legacy patient portal to a modern microservices architecture.', '2025-06-01', '2025-12-20', 'Completed'),
 (2, 'Fraud Detection Model', 'Implementing an AI-driven real-time fraud detection pipeline.', '2025-09-15', '2026-04-30', 'Completed'),
 (2, 'Cloud Security Audit', 'Comprehensive vulnerability assessment and AWS infrastructure hardening.', '2026-03-01', '2026-08-31', 'In Progress'),

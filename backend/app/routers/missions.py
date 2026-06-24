@@ -26,11 +26,11 @@ def _get_or_404(mission_id: int, db: Session) -> Mission:
 @router.get("", response_model=list[MissionOut], dependencies=[Depends(get_current_user)])
 def list_missions(
     db: DB,
-    client_id: Annotated[Optional[int], Query()] = None,
+    customer_id: Annotated[Optional[int], Query()] = None,
 ) -> list[Mission]:
     q = db.query(Mission)
-    if client_id is not None:
-        q = q.filter(Mission.client_id == client_id)
+    if customer_id is not None:
+        q = q.filter(Mission.customer_id == customer_id)
     return q.order_by(Mission.mission_id).all()
 
 

@@ -56,12 +56,13 @@ class ClientUpdate(BaseModel):
     phone: str | None = Field(default=None, max_length=20)
     address: str | None = None
     sector: str | None = Field(default=None, max_length=30)
+    logo_url: str | None = Field(default=None, max_length=500)
 
 
 class ClientOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    client_id: int
+    customer_id: int
     company_name: str
     contact_name: str | None
     email: str | None
@@ -69,6 +70,7 @@ class ClientOut(BaseModel):
     address: str | None
     created_at: datetime
     sector: str | None
+    logo_url: str | None
 
 
 class MissionUpdate(BaseModel):
@@ -83,7 +85,7 @@ class MissionOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     mission_id: int
-    client_id: int
+    customer_id: int
     mission_name: str
     description: str | None
     start_date: date | None

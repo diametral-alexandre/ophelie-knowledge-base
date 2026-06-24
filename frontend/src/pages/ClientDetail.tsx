@@ -23,7 +23,7 @@ export default function ClientDetail() {
     setLoading(true);
     Promise.all([
       api<Client>(`/api/clients/${id}`),
-      api<Mission[]>(`/api/missions?client_id=${id}`),
+      api<Mission[]>(`/api/missions?customer_id=${id}`),
     ])
       .then(([c, m]) => {
         setClient(c);
