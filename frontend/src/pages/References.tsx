@@ -9,43 +9,39 @@ import {
 } from "@diametral/design-system/react";
 
 import { api } from "../lib/api";
-import type { Client, Mission } from "../lib/types";
+import type { ReferenceListItem } from "../lib/types";
+import { PersonHead } from "../lib/resourceUi";
 
 export default function References() {
-  const [missions, setMissions] = useState<Mission[]>([]);
-  const [clientMap, setClientMap] = useState<Map<number, Client>>(new Map());
+  const [references, setReferences] = useState<ReferenceListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [q, setQ] = useState("");
 
   useEffect(() => {
-    Promise.all([
-      api<Mission[]>("/api/missions"),
-      api<Client[]>("/api/clients"),
-    ])
-      .then(([ms, cs]) => {
-        setMissions(ms);
-        setClientMap(new Map(cs.map((c) => [c.customer_id, c])));
-      })
+    api<ReferenceListItem[]>("/api/references")
+      .then(setReferences)
       .catch((e: Error) => setError(e.message))
       .finally(() => setLoading(false));
   }, []);
 
   const rows = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    const sorted = [...missions].sort((a, b) => {
-      if (a.status === b.status) return a.mission_id - b.mission_id;
-      return a.status === "In Progress" ? -1 : 1;
-    });
-    if (!needle) return sorted;
-    return sorted.filter((m) => {
-      const client = clientMap.get(m.customer_id);
-      return [m.mission_name, m.status, client?.company_name ?? "", client?.sector ?? ""]
+    if (!needle) return references;
+    return references.filter((r) =>
+      [
+        r.first_name ?? "",
+        r.last_name ?? "",
+        r.company_name,
+        r.mission_name,
+        r.role_description ?? "",
+        r.skill_name,
+      ]
         .join(" ")
         .toLowerCase()
-        .includes(needle);
-    });
-  }, [q, missions, clientMap]);
+        .includes(needle)
+    );
+  }, [q, references]);
 
   return (
     <>
@@ -57,7 +53,7 @@ export default function References() {
       <Card style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <Input
-            placeholder="Search title, client, status…"
+            placeholder="Search consultant, company, role…"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             style={{ maxWidth: 360 }}
@@ -76,42 +72,57 @@ export default function References() {
       ) : rows.length === 0 ? (
         <EmptyState title="No matches" description="No reference matches that search." />
       ) : (
-        <DataGrid<Mission>
+        <DataGrid<ReferenceListItem>
           rows={rows}
-          rowKey={(m) => m.mission_id}
+          rowKey={(r) => r.reference_id}
           pageSize={rows.length}
           columns={[
             {
-              key: "mission_name",
-              header: "Reference",
-              render: (m) => (
-                <Link to={`/references/${m.mission_id}`} style={{ color: "inherit", textDecoration: "none" }}>
-                  <div style={{ fontWeight: 500 }}>{m.mission_name}</div>
-                  <div style={{ fontSize: 12, color: "var(--ds-ink-soft)" }}>
-                    {clientMap.get(m.customer_id)?.company_name ?? "—"}
-                  </div>
+              key: "employee",
+              header: "Consultant",
+              render: (r) =>
+                r.employee_id ? (
+                  <Link
+                    to={`/consultants/${r.employee_id}`}
+                    style={{ color: "inherit", textDecoration: "none" }}
+                  >
+                    <PersonHead
+                      initials={`${r.first_name?.[0] ?? ""}${r.last_name?.[0] ?? ""}`.toUpperCase()}
+                      name={`${r.first_name ?? ""} ${r.last_name ?? ""}`.trim()}
+                      src={r.profile_image_url ?? undefined}
+                    />
+                  </Link>
+                ) : (
+                  <span style={{ color: "var(--ds-ink-faint)" }}>—</span>
+                ),
+            },
+            {
+              key: "company",
+              header: "Company",
+              sortable: true,
+              render: (r) => (
+                <Link
+                  to={`/references/${r.mission_id}`}
+                  style={{ color: "inherit", textDecoration: "none" }}
+                >
+                  <div style={{ fontWeight: 500 }}>{r.company_name}</div>
+                  <div style={{ fontSize: 12, color: "var(--ds-ink-soft)" }}>{r.mission_name}</div>
                 </Link>
               ),
             },
             {
-              key: "sector",
-              header: "Sector",
-              sortable: true,
-              render: (m) => clientMap.get(m.customer_id)?.sector ?? "—",
+              key: "skill",
+              header: "Skill",
+              render: (r) => r.skill_name,
             },
             {
-              key: "status",
-              header: "Status",
-              sortable: true,
-              render: (m) => m.status,
-            },
-            {
-              key: "dates",
-              header: "Dates",
-              render: (m) =>
-                m.start_date && m.end_date
-                  ? `${m.start_date} → ${m.end_date}`
-                  : m.start_date ?? "—",
+              key: "role",
+              header: "Role",
+              render: (r) => (
+                <span style={{ fontSize: 13, color: "var(--ds-ink-soft)" }}>
+                  {r.role_description ?? "—"}
+                </span>
+              ),
             },
           ]}
         />

@@ -29,7 +29,7 @@ export default function ReferenceDetail() {
       .then(([m, refRows]) => {
         setMission(m);
         setRows(refRows);
-        return api<Client>(`/api/clients/${m.customer_id}`);
+        return api<Client>(`/api/clients/${m.client_id}`);
       })
       .then(setClient)
       .catch((e: Error) => setError(e.message))
@@ -38,7 +38,7 @@ export default function ReferenceDetail() {
 
   const skills = useMemo(
     () => [...new Set(rows.map((r) => r.skill_name))].sort(),
-    [rows]
+    [rows],
   );
 
   const team = useMemo(() => {
@@ -54,7 +54,10 @@ export default function ReferenceDetail() {
   }, [rows]);
 
   const backLink = (
-    <Link to="/references" style={{ color: "var(--ds-ink-soft)", textDecoration: "none" }}>
+    <Link
+      to="/references"
+      style={{ color: "var(--ds-ink-soft)", textDecoration: "none" }}
+    >
       ← References
     </Link>
   );
@@ -63,7 +66,10 @@ export default function ReferenceDetail() {
     return (
       <>
         <PageHeader title="Loading…" breadcrumb={backLink} />
-        <EmptyState title="Loading…" description="Fetching reference details." />
+        <EmptyState
+          title="Loading…"
+          description="Fetching reference details."
+        />
       </>
     );
   }
@@ -74,7 +80,9 @@ export default function ReferenceDetail() {
         <PageHeader title="Reference not found" breadcrumb={backLink} />
         <EmptyState
           title="No such reference"
-          description={error ?? "This engagement doesn't exist or has been removed."}
+          description={
+            error ?? "This engagement doesn't exist or has been removed."
+          }
           actions={
             <Link to="/references">
               <Button>Back to references</Button>
@@ -93,10 +101,19 @@ export default function ReferenceDetail() {
         breadcrumb={backLink}
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 16, alignItems: "start" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 320px",
+          gap: 16,
+          alignItems: "start",
+        }}
+      >
         <Section title="Team" aside={team.length}>
           {team.length === 0 ? (
-            <div style={{ fontSize: 13, color: "var(--ds-ink-faint)" }}>No consultants linked.</div>
+            <div style={{ fontSize: 13, color: "var(--ds-ink-faint)" }}>
+              No consultants linked.
+            </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column" }}>
               {team.map(({ row: r, skills: memberSkills }, i) => (
@@ -104,7 +121,10 @@ export default function ReferenceDetail() {
                   key={r.employee_id}
                   style={{
                     padding: "12px 0",
-                    borderBottom: i < team.length - 1 ? "1px solid var(--ds-border)" : "none",
+                    borderBottom:
+                      i < team.length - 1
+                        ? "1px solid var(--ds-border)"
+                        : "none",
                     display: "flex",
                     flexDirection: "column",
                     gap: 8,
@@ -132,7 +152,9 @@ export default function ReferenceDetail() {
             {skills.length > 0 ? (
               <ChipRow items={skills} />
             ) : (
-              <div style={{ fontSize: 13, color: "var(--ds-ink-faint)" }}>No skills recorded.</div>
+              <div style={{ fontSize: 13, color: "var(--ds-ink-faint)" }}>
+                No skills recorded.
+              </div>
             )}
           </Section>
 
@@ -146,12 +168,14 @@ export default function ReferenceDetail() {
                   term: "Client",
                   desc: client ? (
                     <Link
-                      to={`/clients/${client.customer_id}`}
+                      to={`/clients/${client.client_id}`}
                       style={{ color: "var(--ds-accent, var(--ds-ink))" }}
                     >
                       {client.company_name}
                     </Link>
-                  ) : "—",
+                  ) : (
+                    "—"
+                  ),
                 },
                 { term: "Sector", desc: client?.sector ?? "—" },
               ]}

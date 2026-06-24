@@ -29,6 +29,20 @@ export interface Mission {
   status: string;
 }
 
+export interface ReferenceListItem {
+  reference_id: number;
+  role_description: string | null;
+  employee_id: number | null;
+  first_name: string | null;
+  last_name: string | null;
+  profile_image_url: string | null;
+  mission_id: number;
+  mission_name: string;
+  status: string;
+  company_name: string;
+  skill_name: string;
+}
+
 export interface EmployeeReference {
   reference_id: number;
   role_description: string | null;

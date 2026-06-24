@@ -61,7 +61,7 @@ class ClientUpdate(BaseModel):
 class ClientOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    customer_id: int
+    client_id: int
     company_name: str
     contact_name: str | None
     email: str | None
@@ -83,7 +83,7 @@ class MissionOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     mission_id: int
-    customer_id: int
+    client_id: int
     mission_name: str
     description: str | None
     start_date: date | None
@@ -105,6 +105,24 @@ class EmployeeReferenceOut(BaseModel):
     status: str
     start_date: date | None
     end_date: date | None
+
+
+class ReferenceListOut(BaseModel):
+    """Enriched reference row for the list view: employee + mission + client + skill."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    reference_id: int
+    role_description: str | None
+    employee_id: int | None
+    first_name: str | None
+    last_name: str | None
+    profile_image_url: str | None
+    mission_id: int
+    mission_name: str
+    status: str
+    company_name: str
+    skill_name: str
 
 
 class ReferenceUpdate(BaseModel):

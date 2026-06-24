@@ -23,7 +23,7 @@ export default function ClientDetail() {
     setLoading(true);
     Promise.all([
       api<Client>(`/api/clients/${id}`),
-      api<Mission[]>(`/api/missions?customer_id=${id}`),
+      api<Mission[]>(`/api/missions?client_id=${id}`),
     ])
       .then(([c, m]) => {
         setClient(c);
@@ -34,7 +34,10 @@ export default function ClientDetail() {
   }, [id]);
 
   const backLink = (
-    <Link to="/clients" style={{ color: "var(--ds-ink-soft)", textDecoration: "none" }}>
+    <Link
+      to="/clients"
+      style={{ color: "var(--ds-ink-soft)", textDecoration: "none" }}
+    >
       ← Clients
     </Link>
   );
@@ -54,7 +57,9 @@ export default function ClientDetail() {
         <PageHeader title="Client not found" breadcrumb={backLink} />
         <EmptyState
           title="No such client"
-          description={error ?? "This client doesn't exist or has been removed."}
+          description={
+            error ?? "This client doesn't exist or has been removed."
+          }
           actions={
             <Link to="/clients">
               <Button>Back to clients</Button>
@@ -73,7 +78,14 @@ export default function ClientDetail() {
         breadcrumb={backLink}
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 16, alignItems: "start" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 320px",
+          gap: 16,
+          alignItems: "start",
+        }}
+      >
         <Section title="Missions" aside={missions.length}>
           {missions.length === 0 ? (
             <div style={{ fontSize: 13, color: "var(--ds-ink-faint)" }}>
@@ -90,11 +102,22 @@ export default function ClientDetail() {
                     alignItems: "baseline",
                     gap: 12,
                     padding: "12px 0",
-                    borderBottom: i < missions.length - 1 ? "1px solid var(--ds-border)" : "none",
+                    borderBottom:
+                      i < missions.length - 1
+                        ? "1px solid var(--ds-border)"
+                        : "none",
                   }}
                 >
-                  <span style={{ fontWeight: 500, fontSize: 13.5 }}>{m.mission_name}</span>
-                  <span style={{ fontSize: 12, color: "var(--ds-ink-faint)", whiteSpace: "nowrap" }}>
+                  <span style={{ fontWeight: 500, fontSize: 13.5 }}>
+                    {m.mission_name}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: "var(--ds-ink-faint)",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {m.status}
                   </span>
                 </div>

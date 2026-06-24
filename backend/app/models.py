@@ -23,7 +23,7 @@ class Employee(Base):
 class Client(Base):
     __tablename__ = "clients"
 
-    customer_id: Mapped[int] = mapped_column(primary_key=True)
+    client_id: Mapped[int] = mapped_column(primary_key=True)
     company_name: Mapped[str] = mapped_column(String(100))
     contact_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
     email: Mapped[str | None] = mapped_column(String(100), nullable=True)
@@ -37,7 +37,7 @@ class Mission(Base):
     __tablename__ = "missions"
 
     mission_id: Mapped[int] = mapped_column(primary_key=True)
-    customer_id: Mapped[int] = mapped_column(Integer)
+    client_id: Mapped[int] = mapped_column(Integer)
     mission_name: Mapped[str] = mapped_column(String(150))
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     start_date: Mapped[date | None] = mapped_column(Date, nullable=True)
