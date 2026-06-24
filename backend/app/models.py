@@ -18,6 +18,7 @@ class Employee(Base):
     department: Mapped[str | None] = mapped_column(String(50), nullable=True)
     hire_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     profile_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    status: Mapped[str] = mapped_column(String(20), default="available")
 
 
 class Client(Base):

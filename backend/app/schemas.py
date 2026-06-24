@@ -35,6 +35,7 @@ class EmployeeUpdate(BaseModel):
     department: str | None = None
     hire_date: date | None = None
     profile_image_url: str | None = Field(default=None, max_length=500)
+    status: str | None = Field(default=None, max_length=20)
 
 
 class EmployeeOut(BaseModel):
@@ -47,6 +48,7 @@ class EmployeeOut(BaseModel):
     department: str | None
     hire_date: date | None
     profile_image_url: str | None
+    status: str
 
 
 class ClientUpdate(BaseModel):

@@ -10,7 +10,8 @@ import {
 
 import { api } from "../lib/api";
 import type { Employee } from "../lib/types";
-import { PersonHead } from "../lib/resourceUi";
+import { PersonHead, StatusTag } from "../lib/resourceUi";
+import type { ConsultantStatus } from "../data/types";
 
 export default function Consultants() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -115,7 +116,12 @@ export default function Consultants() {
               key: "status",
               header: "Status",
               sortable: true,
-              render: (c) => c.status ?? "—",
+              render: (c) =>
+                c.status ? (
+                  <StatusTag status={c.status as ConsultantStatus} />
+                ) : (
+                  <span style={{ color: "var(--ds-ink-faint)" }}>—</span>
+                ),
             },
           ]}
         />
