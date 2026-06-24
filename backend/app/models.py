@@ -1,11 +1,44 @@
 """Database models."""
 
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import DateTime, String, Text, func
+from sqlalchemy import Date, DateTime, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .database import Base
+
+
+class Employee(Base):
+    __tablename__ = "employees"
+
+    employee_id: Mapped[int] = mapped_column(primary_key=True)
+    first_name: Mapped[str] = mapped_column(String(50))
+    last_name: Mapped[str] = mapped_column(String(50))
+    email: Mapped[str] = mapped_column(String(100), unique=True)
+    department: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    hire_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+
+
+class Mission(Base):
+    __tablename__ = "missions"
+
+    mission_id: Mapped[int] = mapped_column(primary_key=True)
+    customer_id: Mapped[int] = mapped_column(Integer)
+    mission_name: Mapped[str] = mapped_column(String(150))
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    start_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    end_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    status: Mapped[str] = mapped_column(String(20), default="In Progress")
+
+
+class Reference(Base):
+    __tablename__ = "references"
+
+    reference_id: Mapped[int] = mapped_column(primary_key=True)
+    employee_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    mission_id: Mapped[int] = mapped_column(Integer)
+    skill_id: Mapped[int] = mapped_column(Integer)
+    role_description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class Item(Base):
