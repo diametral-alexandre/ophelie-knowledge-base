@@ -5,12 +5,11 @@ import {
   Card,
   EmptyState,
   Button,
-  DescriptionList,
-  Avatar,
 } from "@diametral/design-system/react";
 
 import { api } from "../lib/api";
 import type { Employee } from "../lib/types";
+import { PersonHead } from "../lib/resourceUi";
 
 export default function ConsultantDetail() {
   const { id = "" } = useParams();
@@ -72,20 +71,21 @@ export default function ConsultantDetail() {
 
       <div style={{ display: "grid", gap: 16 }}>
         <Card>
-          <div style={{ display: "flex", gap: 18, alignItems: "flex-start" }}>
-            <Avatar initials={initials} size="lg" />
-            <div style={{ flex: 1, minWidth: 0 }}>
-              {employee.department && (
-                <div style={{ fontSize: 16, fontWeight: 500, marginBottom: 4 }}>
-                  {employee.department}
-                </div>
-              )}
-              <DescriptionList
-                items={[
-                  { term: "Email", desc: employee.email },
-                  { term: "Hire date", desc: employee.hire_date ?? "—" },
-                ]}
-              />
+          <PersonHead
+            initials={initials}
+            name={fullName}
+            sub={employee.department ?? undefined}
+            size="lg"
+            src={employee.profile_image_url ?? undefined}
+          />
+          <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--ds-border)", display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ fontSize: 13, color: "var(--ds-ink-soft)" }}>
+              <span style={{ color: "var(--ds-ink-faint)", marginRight: 8 }}>Email</span>
+              {employee.email}
+            </div>
+            <div style={{ fontSize: 13, color: "var(--ds-ink-soft)" }}>
+              <span style={{ color: "var(--ds-ink-faint)", marginRight: 8 }}>Hire date</span>
+              {employee.hire_date ?? "—"}
             </div>
           </div>
         </Card>

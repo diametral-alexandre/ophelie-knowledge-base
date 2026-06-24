@@ -4,7 +4,8 @@ CREATE TABLE employees (
     last_name VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     department VARCHAR(50),
-    hire_date DATE DEFAULT CURRENT_DATE
+    hire_date DATE DEFAULT CURRENT_DATE,
+    profile_image_url VARCHAR(500)
 );
 
 CREATE TABLE clients (
@@ -45,12 +46,12 @@ CREATE TABLE "references" (
     FOREIGN KEY (skill_id) REFERENCES skills(skill_id) ON DELETE RESTRICT
 );
 
-INSERT INTO employees (first_name, last_name, email, department, hire_date) VALUES
-('Alex', 'Mercer', 'alex.mercer@company.com', 'Engineering', '2024-01-15'),
-('Maya', 'Lin', 'maya.lin@company.com', 'Data Science', '2024-03-22'),
-('David', 'Kim', 'david.kim@company.com', 'Cybersecurity', '2025-05-10'),
-('Sarah', 'Alami', 'sarah.alami@company.com', 'Engineering', '2025-08-01'),
-('James', 'OConnor', 'james.oconnor@company.com', 'Cloud Architecture', '2026-02-14');
+INSERT INTO employees (first_name, last_name, email, department, hire_date, profile_image_url) VALUES
+('Alex', 'Mercer', 'alex.mercer@company.com', 'Engineering', '2024-01-15', 'https://i.pravatar.cc/150?u=alex.mercer@company.com'),
+('Maya', 'Lin', 'maya.lin@company.com', 'Data Science', '2024-03-22', 'https://i.pravatar.cc/150?u=maya.lin@company.com'),
+('David', 'Kim', 'david.kim@company.com', 'Cybersecurity', '2025-05-10', 'https://i.pravatar.cc/150?u=david.kim@company.com'),
+('Sarah', 'Alami', 'sarah.alami@company.com', 'Engineering', '2025-08-01', 'https://i.pravatar.cc/150?u=sarah.alami@company.com'),
+('James', 'OConnor', 'james.oconnor@company.com', 'Cloud Architecture', '2026-02-14', 'https://i.pravatar.cc/150?u=james.oconnor@company.com');
 
 INSERT INTO clients (company_name, contact_name, email, phone, address, sector) VALUES
 ('Apex Health Solutions', 'Dr. Robert Chen', 'r.chen@apexhealth.com', '+1-555-0192', '123 Medical Plaza, Boston, MA', 'Healthcare'),

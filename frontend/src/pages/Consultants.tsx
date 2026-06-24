@@ -89,6 +89,7 @@ export default function Consultants() {
                     initials={initials(c)}
                     name={fullName(c)}
                     sub={c.department ?? undefined}
+                    src={c.profile_image_url ?? undefined}
                   />
                 </Link>
               ),

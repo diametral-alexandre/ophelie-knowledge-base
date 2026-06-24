@@ -5,6 +5,7 @@ export interface Employee {
   email: string;
   department: string | null;
   hire_date: string | null;
+  profile_image_url: string | null;
 }
 
 export interface Item {

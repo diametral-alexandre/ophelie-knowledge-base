@@ -81,21 +81,35 @@ export function Section({
   );
 }
 
+const AVATAR_SIZE: Record<string, number> = { sm: 24, lg: 48 };
+const DEFAULT_AVATAR_PX = 32;
+
 // Identity block reused on the consultant header and in list cells.
 export function PersonHead({
   initials,
   name,
   sub,
   size,
+  src,
 }: {
   initials: string;
   name: ReactNode;
   sub?: ReactNode;
   size?: "sm" | "lg";
+  src?: string;
 }) {
+  const px = size ? AVATAR_SIZE[size] : DEFAULT_AVATAR_PX;
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-      <Avatar initials={initials} size={size} />
+      {src ? (
+        <img
+          src={src}
+          alt={typeof name === "string" ? name : initials}
+          style={{ width: px, height: px, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
+        />
+      ) : (
+        <Avatar initials={initials} size={size} />
+      )}
       <div style={{ minWidth: 0 }}>
         <div style={{ fontWeight: 500 }}>{name}</div>
         {sub != null && (

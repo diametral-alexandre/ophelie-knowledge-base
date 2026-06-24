@@ -34,6 +34,7 @@ class EmployeeUpdate(BaseModel):
     email: str | None = Field(default=None, min_length=1, max_length=100)
     department: str | None = None
     hire_date: date | None = None
+    profile_image_url: str | None = Field(default=None, max_length=500)
 
 
 class EmployeeOut(BaseModel):
@@ -45,6 +46,7 @@ class EmployeeOut(BaseModel):
     email: str
     department: str | None
     hire_date: date | None
+    profile_image_url: str | None
 
 
 class MissionUpdate(BaseModel):
