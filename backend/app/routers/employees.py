@@ -32,7 +32,11 @@ def get_employee(employee_id: int, db: DB) -> Employee:
     return _get_or_404(employee_id, db)
 
 
-@router.patch("/{employee_id}", response_model=EmployeeOut, dependencies=[Depends(require_role("admin"))])
+@router.patch(
+    "/{employee_id}",
+    response_model=EmployeeOut,
+    dependencies=[Depends(require_role("admin"))],
+)
 def update_employee(employee_id: int, payload: EmployeeUpdate, db: DB) -> Employee:
     employee = _get_or_404(employee_id, db)
     for key, value in payload.model_dump(exclude_unset=True).items():
@@ -42,7 +46,11 @@ def update_employee(employee_id: int, payload: EmployeeUpdate, db: DB) -> Employ
     return employee
 
 
-@router.delete("/{employee_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_role("admin"))])
+@router.delete(
+    "/{employee_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_role("admin"))],
+)
 def delete_employee(employee_id: int, db: DB) -> None:
     employee = _get_or_404(employee_id, db)
     db.delete(employee)
