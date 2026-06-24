@@ -29,7 +29,7 @@ export default function ReferenceDetail() {
       .then(([m, refRows]) => {
         setMission(m);
         setRows(refRows);
-        return api<Client>(`/api/clients/${m.client_id}`);
+        return api<Client>(`/api/clients/${m.customer_id}`);
       })
       .then(setClient)
       .catch((e: Error) => setError(e.message))
@@ -168,7 +168,7 @@ export default function ReferenceDetail() {
                   term: "Client",
                   desc: client ? (
                     <Link
-                      to={`/clients/${client.client_id}`}
+                      to={`/clients/${client.customer_id}`}
                       style={{ color: "var(--ds-accent, var(--ds-ink))" }}
                     >
                       {client.company_name}
