@@ -7,9 +7,12 @@ import { useDismissable } from "./useDismissable";
 import { Brandmark } from "./Brandmark";
 import { NAV_GROUPS, activeNavId } from "./nav";
 
-// The left rail — Ophélie wordmark, tagline, grouped nav with live counts and
-// an active-item accent bar, and a bottom user menu. Mirrors ophelieV2's
-// Sidebar, restyled with Diametral tokens.
+// The left rail — Ophélie wordmark, tagline, grouped nav with an active-item
+// accent bar, and a bottom user widget. The Account group lives in the user
+// widget's expandable menu (not the main nav). Restyled with Diametral tokens,
+// mirroring ophelieV2's Sidebar.
+const ACCOUNT_GROUP = "Account";
+
 export function Sidebar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -18,16 +21,22 @@ export function Sidebar() {
   const active = activeNavId(pathname);
   const role = me.roles.includes("admin") ? "Admin" : me.roles[0] ? "Member" : "—";
 
+  // Main nav shows every group except Account; the Account items move into the
+  // bottom user widget's menu.
+  const topGroups = NAV_GROUPS.filter((g) => g.label !== ACCOUNT_GROUP);
+  const accountItems =
+    NAV_GROUPS.find((g) => g.label === ACCOUNT_GROUP)?.items ?? [];
+
   return (
     <aside className="oph-sidebar">
       <div className="oph-brand">
         <Brandmark size={26} />
         <span className="oph-brand-word">Ophélie</span>
       </div>
-      <div className="oph-tagline">The firm's knowledge base.</div>
+      <div className="oph-tagline">Knowledge Management System</div>
 
       <nav className="oph-nav">
-        {NAV_GROUPS.map((group) => (
+        {topGroups.map((group) => (
           <div key={group.label}>
             <div className="oph-nav-group">{group.label}</div>
             {group.items.map((item) => (
@@ -41,9 +50,6 @@ export function Sidebar() {
                   <Icon name={item.icon} size={15} />
                 </span>
                 <span>{item.label}</span>
-                {item.count !== undefined && (
-                  <span className="oph-nav-count">{item.count}</span>
-                )}
               </button>
             ))}
           </div>
@@ -53,17 +59,20 @@ export function Sidebar() {
       <div className="oph-user" ref={ref}>
         {open && (
           <div className="oph-menu" role="menu">
-            <button
-              type="button"
-              role="menuitem"
-              className="oph-menu-item"
-              onClick={() => {
-                setOpen(false);
-                navigate("/profile");
-              }}
-            >
-              <Icon name="user" size={14} /> Profile
-            </button>
+            {accountItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                role="menuitem"
+                className="oph-menu-item"
+                onClick={() => {
+                  setOpen(false);
+                  navigate(item.path);
+                }}
+              >
+                <Icon name={item.icon} size={14} /> {item.label}
+              </button>
+            ))}
             <button
               type="button"
               role="menuitem"
@@ -77,24 +86,35 @@ export function Sidebar() {
             </button>
           </div>
         )}
-        <button
-          type="button"
-          className="oph-user-btn"
-          aria-haspopup="menu"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span className="oph-avatar">{me.initials}</span>
-          <span style={{ minWidth: 0, flex: 1 }}>
-            <span className="oph-user-name" style={{ display: "block" }}>
-              {me.name}
+        <div className="oph-user-row">
+          {/* Clicking the identity area goes straight to the profile… */}
+          <button
+            type="button"
+            className="oph-user-main"
+            onClick={() => navigate("/profile")}
+          >
+            <span className="oph-avatar">{me.initials}</span>
+            <span style={{ minWidth: 0, flex: 1 }}>
+              <span className="oph-user-name" style={{ display: "block" }}>
+                {me.name}
+              </span>
+              <span className="oph-user-role" style={{ display: "block" }}>
+                {role}
+              </span>
             </span>
-            <span className="oph-user-role" style={{ display: "block" }}>
-              {role}
-            </span>
-          </span>
-          <Icon name="chevron-up" size={12} />
-        </button>
+          </button>
+          {/* …while the chevron toggles the account menu. */}
+          <button
+            type="button"
+            className="oph-user-toggle"
+            aria-haspopup="menu"
+            aria-expanded={open}
+            aria-label="Account menu"
+            onClick={() => setOpen((v) => !v)}
+          >
+            <Icon name="chevron-up" size={14} />
+          </button>
+        </div>
       </div>
     </aside>
   );

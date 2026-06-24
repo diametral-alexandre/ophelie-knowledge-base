@@ -172,7 +172,7 @@ function buildHits(
         label: cl.name,
         sub: cl.industry,
         path: `/clients/${cl.id}`,
-        icon: "grid",
+        icon: "home",
         score: best.score,
         match: best.source === cl.name ? best.match : undefined,
       });

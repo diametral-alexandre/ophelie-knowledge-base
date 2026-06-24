@@ -40,13 +40,15 @@ matches `ophelieV2`.
 
 - `nav.ts` — **the navigation source of truth.** `NAV_GROUPS` (Library +
   Account) drives both the sidebar and the search palette's "Pages" group; each
-  item carries `{ id, label, path, icon, count?, sub?, keywords? }`. `NAV_ITEMS`
-  is the flat list; `activeNavId(pathname)` resolves the highlighted item
-  (longest matching path wins). Counts come from the seed.
+  item carries `{ id, label, path, icon, sub?, keywords? }` (`icon` is a
+  Diametral `IconName`). `NAV_ITEMS` is the flat list; `activeNavId(pathname)`
+  resolves the highlighted item (longest matching path wins).
 - `Shell.tsx` — the `grid` layout: `<Sidebar>` rail + main column (`<Topbar>` +
   routed `<main>`). `App.tsx` wraps `<Routes>` in `<Shell>`.
 - `Sidebar.tsx` — Ophélie wordmark + tagline + grouped nav (active-item accent
-  bar) + bottom user menu (Profile / Sign out), via `useDismissable`.
+  bar; **only non-Account groups** render here) + a bottom user widget: the
+  identity area navigates straight to Profile, the chevron toggles a menu (the
+  `Account` group's items — Settings/Profile — + Sign out), via `useDismissable`.
 - `Topbar.tsx` — centred `SearchPalette` + the Light/Dark/Sepia switcher.
 - `SearchPalette.tsx` — inline ⌘K palette (NOT a modal): weighted keyword search
   over pages/consultants/references/clients/skills, match highlight, recent

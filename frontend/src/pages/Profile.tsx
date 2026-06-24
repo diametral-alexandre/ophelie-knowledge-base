@@ -44,7 +44,7 @@ export default function Profile() {
               </Button>
             </div>
           ) : (
-            <Button onClick={() => { setDraft(bio); setEditing(true); }}>Edit bio</Button>
+            <Button onClick={() => { setDraft(bio); setEditing(true); }}>Edit Profile</Button>
           )
         }
       />

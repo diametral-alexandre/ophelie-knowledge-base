@@ -1,15 +1,13 @@
 import type { IconName } from "@diametral/design-system/react";
-import { CONSULTANTS, REFERENCES, CLIENTS } from "../data";
 
 // Single source of truth for the sidebar nav and the search palette's "Pages"
 // group. Mirrors ophelieV2's grouped sidebar: a Library group of resources and
-// an Account group. Counts come straight off the client-owned seed.
+// an Account group.
 export interface NavItem {
   id: string;
   label: string;
   path: string;
   icon: IconName;
-  count?: number;
   /** Search-palette helpers: a one-line description + extra match keywords. */
   sub?: string;
   keywords?: string[];
@@ -29,7 +27,6 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Consultants",
         path: "/consultants",
         icon: "users",
-        count: CONSULTANTS.length,
         sub: "Browse the firm's directory",
         keywords: ["directory", "bench", "people", "team"],
       },
@@ -38,7 +35,6 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "References",
         path: "/references",
         icon: "folder",
-        count: REFERENCES.length,
         sub: "Delivered missions and proof points",
         keywords: ["missions", "past", "engagements"],
       },
@@ -46,8 +42,7 @@ export const NAV_GROUPS: NavGroup[] = [
         id: "clients",
         label: "Clients",
         path: "/clients",
-        icon: "grid",
-        count: CLIENTS.length,
+        icon: "home",
         sub: "Organisations we've delivered for",
         keywords: ["accounts", "customers"],
       },
@@ -55,7 +50,7 @@ export const NAV_GROUPS: NavGroup[] = [
         id: "offers",
         label: "Offers",
         path: "/offers",
-        icon: "file",
+        icon: "list",
         sub: "Incoming calls for tender",
         keywords: ["ao", "appel", "tender", "rfp"],
       },
