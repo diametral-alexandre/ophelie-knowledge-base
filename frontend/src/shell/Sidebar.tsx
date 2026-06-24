@@ -4,13 +4,13 @@ import { Icon } from "@diametral/design-system/react";
 import { keycloak } from "../lib/keycloak";
 import { currentUser } from "../lib/currentUser";
 import { useDismissable } from "./useDismissable";
-import { Brandmark } from "./Brandmark";
 import { NAV_GROUPS, activeNavId } from "./nav";
 
-// The left rail — Ophélie wordmark, tagline, grouped nav with an active-item
-// accent bar, and a bottom user widget. The Account group lives in the user
-// widget's expandable menu (not the main nav). Restyled with Diametral tokens,
-// mirroring ophelieV2's Sidebar.
+// The left rail (beneath the full-width topbar) — grouped nav with an
+// active-item accent bar and icons, plus a bottom-left user widget with a
+// drop-up account menu. The brand wordmark now lives in the topbar; the Account
+// group lives in the user widget's expandable menu (not the main nav). Styled
+// with Diametral tokens, mirroring ophelieV2's Sidebar.
 const ACCOUNT_GROUP = "Account";
 
 export function Sidebar() {
@@ -29,12 +29,6 @@ export function Sidebar() {
 
   return (
     <aside className="oph-sidebar">
-      <div className="oph-brand">
-        <Brandmark size={26} />
-        <span className="oph-brand-word">Ophélie</span>
-      </div>
-      <div className="oph-tagline">Knowledge Management System</div>
-
       <nav className="oph-nav">
         {topGroups.map((group) => (
           <div key={group.label}>

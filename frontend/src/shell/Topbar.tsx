@@ -1,14 +1,30 @@
+import { useNavigate } from "react-router-dom";
+
 import { SearchPalette } from "./SearchPalette";
 import { THEMES, useTheme } from "./theme";
+import { Brandmark } from "./Brandmark";
 
-// The top bar — the search palette centred, with the Light/Dark/Sepia theme
-// switcher on the right (replacing ophelieV2's language switcher, same pill
-// look). The theme control replaces the one ConsoleLayout used to provide.
+// The full-width top bar — the Ophélie brand wordmark on the left, the search
+// palette centred, and the Light/Dark/Sepia theme switcher on the right (same
+// pill look as ophelieV2's language switcher). The theme control replaces the
+// one ConsoleLayout used to provide.
 export function Topbar() {
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
 
   return (
     <header className="oph-topbar">
+      <button
+        type="button"
+        className="oph-topbar-brand"
+        onClick={() => navigate("/")}
+        aria-label="Ophélie — home"
+      >
+        <Brandmark size={26} />
+        <span className="oph-brand-word">Ophélie</span>
+        <span className="oph-brand-divider" aria-hidden="true" />
+        <span className="oph-brand-tag">Knowledge Base</span>
+      </button>
       <div className="oph-topbar-center">
         <SearchPalette placeholder="Search consultants, references, clients…" />
       </div>

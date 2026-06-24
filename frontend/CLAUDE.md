@@ -10,12 +10,15 @@ Vite + React 18 + TypeScript. Routing via `react-router-dom` v6. Auth via
 design system** (`@diametral/design-system/react` + `/css/diametral.css`) — use
 the real `.ds-*` components there, don't hand-roll styles.
 
-The **app shell is custom** (`src/shell/`), not Diametral's `ConsoleLayout`: a
-bespoke Ophélie sidebar + topbar + inline ⌘K search palette, ported from
-`ophelieV2`. It's the one deliberate exception to "don't hand-roll" — but it is
-styled **only with Diametral `--ds-*` tokens** (see the shell section), so it
-recolours correctly under every theme. Borders are `--ds-rule` (there is **no**
-`--ds-border` token — a common mistake).
+The **app shell is custom** (`src/shell/`), laid out as a 2×2 CSS grid that
+mirrors Diametral `ConsoleLayout`'s disposition (a full-width topbar spanning the
+top, the sidebar tucked beneath it, a centered content column) — but built from
+bespoke Ophélie components rather than `ConsoleLayout` itself: an icon nav, a
+bottom-left profile drop-up menu, the inline ⌘K search palette, and the
+Light/Dark/Sepia theme pills. It's the one deliberate exception to "don't
+hand-roll" — but it is styled **only with Diametral `--ds-*` tokens** (see the
+shell section), so it recolours correctly under every theme. Borders are
+`--ds-rule` (there is **no** `--ds-border` token — a common mistake).
 
 ## The data layer (`src/data/`) — read this first
 
@@ -35,26 +38,31 @@ backend — don't fork a second definition.
 
 ## The shell (`src/shell/`)
 
-The chrome around every page — replaces Diametral's `ConsoleLayout` so the look
-matches `ophelieV2`.
+The chrome around every page — a custom topbar + sidebar in a 2×2 grid
+(`.oph-app`: `grid-template-columns: 232px 1fr; grid-template-rows: auto 1fr`).
+The topbar spans both columns (`grid-column: 1 / -1`); the sidebar sits in row 2
+col 1, sticky beneath the topbar (`top: var(--oph-topbar-h)`).
 
 - `nav.ts` — **the navigation source of truth.** `NAV_GROUPS` (Library +
   Account) drives both the sidebar and the search palette's "Pages" group; each
   item carries `{ id, label, path, icon, sub?, keywords? }` (`icon` is a
   Diametral `IconName`). `NAV_ITEMS` is the flat list; `activeNavId(pathname)`
   resolves the highlighted item (longest matching path wins).
-- `Shell.tsx` — the `grid` layout: `<Sidebar>` rail + main column (`<Topbar>` +
-  routed `<main>`). `App.tsx` wraps `<Routes>` in `<Shell>`.
-- `Sidebar.tsx` — Ophélie wordmark + tagline + grouped nav (active-item accent
-  bar; **only non-Account groups** render here) + a bottom user widget: the
-  identity area navigates straight to Profile, the chevron toggles a menu (the
-  `Account` group's items — Settings/Profile — + Sign out), via `useDismissable`.
-- `Topbar.tsx` — centred `SearchPalette` + the Light/Dark/Sepia switcher.
+- `Shell.tsx` — the grid: `<Topbar>` (row 1, full width) + `<Sidebar>` (row 2,
+  col 1) + routed `<main>` (row 2, col 2). `App.tsx` wraps `<Routes>` in
+  `<Shell>`.
+- `Topbar.tsx` — the brand wordmark (`Brandmark` + Ophélie + `Knowledge Base`
+  tag, clickable → home) on the left, centred `SearchPalette`, and the
+  Light/Dark/Sepia theme pills on the right.
+- `Sidebar.tsx` — grouped nav with an active-item accent bar + icons (**only
+  non-Account groups** render here) + a bottom-left user widget: the identity
+  area navigates to Profile, the chevron toggles a drop-up menu (the `Account`
+  group's items — Settings/Profile — + Sign out), via `useDismissable`.
 - `SearchPalette.tsx` — inline ⌘K palette (NOT a modal): weighted keyword search
   over pages/consultants/references/clients/skills, match highlight, recent
   chips, ↑/↓/↵/esc. Reads the seed directly via `src/data`.
 - `theme.ts` — `useTheme()` drives `data-theme` on `<html>` (light/dark/sepia)
-  and persists it. Replaces the switcher `ConsoleLayout` used to own.
+  and persists it; the theme pills in `Topbar.tsx` are wired to it.
 - `Brandmark.tsx` — the Diametral logo mark SVG. `useDismissable.ts` — outside-
   click/Escape toggle for the user menu.
 - `shell.css` — all `.oph-*` classes; **only `--ds-*` tokens** for colour. Loaded

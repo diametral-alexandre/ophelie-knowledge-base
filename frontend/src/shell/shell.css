@@ -21,40 +21,25 @@
   --oph-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
   --oph-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.08);
   --oph-shadow-pop: 0 8px 32px rgba(0, 0, 0, 0.14);
+  --oph-topbar-h: 61px;
 
   display: grid;
   grid-template-columns: 232px 1fr;
+  grid-template-rows: auto 1fr;
   min-height: 100vh;
+  background: var(--ds-bg);
 }
 
-/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+/* ── Sidebar (row 2, col 1 — sticky beneath the full-width topbar) ─────────── */
 .oph-sidebar {
   background: var(--ds-bg-alt);
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: var(--oph-topbar-h);
+  align-self: start;
+  height: calc(100vh - var(--oph-topbar-h));
   box-shadow: 1px 0 0 var(--ds-rule);
-}
-.oph-brand {
-  padding: 20px 20px 6px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.oph-brand-word {
-  font-family: var(--ds-font-title, serif);
-  font-style: italic;
-  font-size: 22px;
-  line-height: 1;
-  color: var(--ds-ink);
-}
-.oph-tagline {
-  padding: 0 20px 12px;
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--ds-ink-faint);
 }
 .oph-nav {
   padding: 8px 12px;
@@ -204,32 +189,57 @@
   border-top: 1px solid var(--ds-rule);
 }
 
-/* ── Main column ─────────────────────────────────────────────────────────── */
-.oph-main {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  background: var(--ds-bg);
-}
+/* ── Main column (row 2, col 2) ────────────────────────────────────────────── */
 .oph-content {
+  min-width: 0;
   width: 100%;
   max-width: 1180px;
   margin: 0 auto;
   padding: 28px 28px 64px;
 }
 
-/* ── Topbar ──────────────────────────────────────────────────────────────── */
+/* ── Topbar (full-width nav bar — spans both grid columns on row 1) ─────────── */
 .oph-topbar {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 14px 28px;
+  padding: 14px 24px;
   border-bottom: 1px solid var(--ds-rule);
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 30;
   background: color-mix(in srgb, var(--ds-bg) 85%, transparent);
   backdrop-filter: blur(12px);
+}
+.oph-topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ds-ink);
+  cursor: pointer;
+}
+.oph-brand-word {
+  font-family: var(--ds-font-title, serif);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ds-ink);
+}
+.oph-brand-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--ds-rule);
+}
+.oph-brand-tag {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ds-ink-faint);
 }
 .oph-topbar-center {
   flex: 1;
