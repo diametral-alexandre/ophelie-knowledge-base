@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from . import models  # noqa: F401  (registers tables on Base.metadata)
 from .config import settings
 from .database import Base, engine
-from .routers import items, me
+from .routers import employees, items, me, missions, references
 
 
 @asynccontextmanager
@@ -31,6 +31,9 @@ app.add_middleware(
 
 app.include_router(me.router)
 app.include_router(items.router)
+app.include_router(employees.router)
+app.include_router(missions.router)
+app.include_router(references.router)
 
 
 @app.get("/health", tags=["health"])

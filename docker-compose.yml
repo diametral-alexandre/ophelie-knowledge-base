@@ -1,4 +1,4 @@
-name: hackathon
+name: diametral
 
 services:
   # --- Frontend: Vite + React + TS, themed with the Diametral design system ---
@@ -8,7 +8,7 @@ services:
       - "5173:5173"
     environment:
       VITE_KEYCLOAK_URL: http://localhost:8080
-      VITE_KEYCLOAK_REALM: hackathon
+      VITE_KEYCLOAK_REALM: diametral
       VITE_KEYCLOAK_CLIENT_ID: web
       VITE_API_URL: http://localhost:8000
     volumes:
@@ -31,8 +31,8 @@ services:
       KEYCLOAK_INTERNAL_URL: http://keycloak:8080
       # Public URL the browser uses — must equal the token `iss` host.
       KEYCLOAK_ISSUER_URL: http://localhost:8080
-      KEYCLOAK_REALM: hackathon
-      KEYCLOAK_AUDIENCE: hackathon-api
+      KEYCLOAK_REALM: diametral
+      KEYCLOAK_AUDIENCE: diametral-api
       CORS_ORIGINS: http://localhost:5173
     volumes:
       - ./backend:/app
@@ -53,6 +53,7 @@ services:
       - "5432:5432"
     volumes:
       - app-db-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U app -d app"]
       interval: 5s
