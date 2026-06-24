@@ -198,7 +198,6 @@
    gone (the rail is toggled from the topbar trigger instead). */
 .oph-user {
   position: relative;
-  margin-top: auto;
   box-shadow: 0 -1px 0 var(--ds-rule);
 }
 .oph-user-main {
@@ -258,7 +257,8 @@
 .oph-app.collapsed .oph-nav {
   padding: 8px;
 }
-.oph-app.collapsed .oph-nav-item {
+.oph-app.collapsed .oph-nav-item,
+.oph-app.collapsed .oph-collapse {
   justify-content: center;
   gap: 0;
   padding: 8px;
@@ -285,7 +285,8 @@
 /* Hover tooltips that replace the labels while collapsed (the accessible name
    stays on the button via aria-label). Inverted ink-on-bg so it reads against
    the rail under every theme. */
-.oph-app.collapsed .oph-nav-item::after {
+.oph-app.collapsed .oph-nav-item::after,
+.oph-app.collapsed .oph-collapse::after {
   content: attr(data-label);
   position: absolute;
   left: calc(100% + 8px);
@@ -304,7 +305,8 @@
   transition: opacity 100ms ease, transform 100ms ease;
   z-index: 50;
 }
-.oph-app.collapsed .oph-nav-item:hover::after {
+.oph-app.collapsed .oph-nav-item:hover::after,
+.oph-app.collapsed .oph-collapse:hover::after {
   opacity: 1;
   transform: translateY(-50%) scale(1);
 }
@@ -370,22 +372,28 @@
   text-transform: uppercase;
   color: var(--ds-ink-faint);
 }
-/* Sidebar trigger + breadcrumb (sidebar-07's header controls). */
-.oph-trigger {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+/* In-rail collapse control (sidebar-07's SidebarRail) — pinned to the rail's
+   foot just above the user widget (`margin-top: auto` claims the free space, so
+   `.oph-user` no longer needs it). Muted utility styling; shares the rail's
+   icon/label collapse behavior via .oph-nav-icon / .oph-nav-label. */
+.oph-collapse {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: auto;
+  padding: 10px 14px;
   border: 0;
-  border-radius: 6px;
   background: none;
-  color: var(--ds-ink-soft);
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--ds-ink-faint);
   cursor: pointer;
   transition: background-color 80ms ease, color 80ms ease;
 }
-.oph-trigger:hover {
-  background: color-mix(in srgb, var(--ds-ink) 6%, transparent);
+.oph-collapse:hover {
+  background: color-mix(in srgb, var(--ds-ink) 4%, transparent);
   color: var(--ds-ink);
 }
 

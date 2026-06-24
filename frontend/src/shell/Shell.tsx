@@ -16,8 +16,8 @@ export function Shell({ children }: { children: ReactNode }) {
   const { collapsed, toggle } = useSidebar();
   return (
     <div className={`oph-app${collapsed ? " collapsed" : ""}`}>
-      <Topbar collapsed={collapsed} onToggle={toggle} />
-      <Sidebar collapsed={collapsed} />
+      <Topbar />
+      <Sidebar collapsed={collapsed} onToggle={toggle} />
       <main className="oph-content">{children}</main>
     </div>
   );

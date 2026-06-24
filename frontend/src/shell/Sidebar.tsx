@@ -54,9 +54,10 @@ function ChevronsUpDown() {
 
 interface SidebarProps {
   collapsed: boolean;
+  onToggle: () => void;
 }
 
-export function Sidebar({ collapsed }: SidebarProps) {
+export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
   const me = currentUser();
@@ -213,9 +214,25 @@ export function Sidebar({ collapsed }: SidebarProps) {
         })}
       </nav>
 
+      {/* In-rail collapse control (sidebar-07's SidebarRail/trigger) — retracts
+          the rail to icon-only and back. Mirrors ⌘B; chevron points the way it
+          will move. Pinned just above the user widget at the rail's foot. */}
+      <button
+        type="button"
+        className="oph-collapse"
+        onClick={onToggle}
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        aria-pressed={collapsed}
+        data-label={collapsed ? "Expand (⌘B)" : "Collapse"}
+      >
+        <span className="oph-nav-icon">
+          <Icon name={collapsed ? "chevron-right" : "chevron-left"} size={15} />
+        </span>
+        <span className="oph-nav-label">Collapse</span>
+      </button>
+
       {/* Footer profile section (sidebar-07's NavUser) — the whole row is the
-          menu trigger; the account menu opens upward. The rail is collapsed
-          from the topbar trigger (⌘B), so there's no in-rail collapse button. */}
+          menu trigger; the account menu opens upward. */}
       <div className="oph-user" ref={ref}>
         {open && (
           <div className="oph-menu ds-menu" role="menu">
