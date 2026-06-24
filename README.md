@@ -1,10 +1,19 @@
-# Hackathon whiteapp
+# Ophélie knowledge base
 
-A ready-to-fork starter for hackathons: a **React** frontend on the
+A consulting-firm **knowledge base** — a Library of consultants, references
+(missions), clients, and offers — built on a hackathon "whiteapp" starter: a
+**React** frontend on the
 [Diametral design system](https://github.com/LittleBigCode/design-system), a
 **FastAPI** backend, **Postgres**, and **Keycloak** (with its own Postgres) for
 authentication — all wired together and started with a single
 `docker compose up`. Keycloak's login and emails are themed with Diametral too.
+
+> **Where the product lives today:** the frontend is the Ophélie app and owns its
+> data **client-side** — the Library is seeded in `frontend/src/data/` (no backend
+> behind it yet). The **backend is still the starter's generic `Item` API**; it
+> hasn't been ported to the consulting domain. The domain model in
+> `frontend/src/data/types.ts` (`Consultant`, `Reference`, `Client`) is the source
+> of truth to port backward when real persistence lands.
 
 ```
 ┌────────────┐   Bearer token    ┌────────────┐      SQL      ┌────────────┐
@@ -49,22 +58,28 @@ Sign in with one of the seeded users:
 ## What's inside
 
 ```
-hackathon/
+ophelie-knowledge-base/
 ├── docker-compose.yml          # the 5 services
 ├── Makefile                    # up / down / logs / clean
-├── frontend/                   # Vite + React + TS
+├── frontend/                   # Vite + React + TS — the Ophélie app
 │   ├── src/
+│   │   ├── data/               # the client-owned Library seed (MVP source of truth)
+│   │   │   ├── types.ts        # domain model: Consultant, Reference, Client
+│   │   │   ├── consultants.ts  # seed records
+│   │   │   ├── references.ts   # seed records
+│   │   │   └── index.ts        # barrel
 │   │   ├── lib/
 │   │   │   ├── keycloak.ts      # keycloak-js client
 │   │   │   ├── api.ts           # fetch wrapper (injects/refreshes the token)
+│   │   │   ├── currentUser.ts   # display user from the token
+│   │   │   ├── resourceUi.tsx   # shared resource-screen helpers
 │   │   │   └── config.ts        # reads VITE_* env
 │   │   ├── main.tsx             # Keycloak init gate, then renders the app
-│   │   ├── App.tsx              # ConsoleLayout shell + routes
-│   │   └── pages/
-│   │       ├── Dashboard.tsx    # stat cards + chart + live item count
-│   │       └── Items.tsx        # full CRUD against the backend
+│   │   ├── App.tsx              # ConsoleLayout shell + ROUTES/NAV + routes
+│   │   └── pages/               # Consultants, References, Clients, Offers
+│   │       │                    #   (+ *Detail), Settings, Profile
 │   └── Dockerfile
-├── backend/                    # FastAPI
+├── backend/                    # FastAPI — still the starter's generic Item API
 │   ├── app/
 │   │   ├── main.py             # app factory, CORS, routers, table create
 │   │   ├── config.py           # pydantic-settings
@@ -78,6 +93,21 @@ hackathon/
     ├── realm-export.json       # the `hackathon` realm (clients, roles, users)
     └── themes/diametral/       # the Diametral login + email theme
 ```
+
+## The knowledge base (frontend data layer)
+
+The Library is **frontend-owned** for now — there is no backend behind it. Seed
+records live in `frontend/src/data/`, with the domain model in `types.ts`:
+
+- **`Consultant`** — profile, grade, status, skills, certifications, mission ids.
+- **`Reference`** — a mission/engagement: client, industry, team, outcomes, and
+  the consultants who staffed it.
+- **`Client`** — name + industry, referenced by missions.
+
+Relationships are by id (`Consultant.missionIds ↔ Reference.id`,
+`Reference.consultants ↔ Consultant.id`). To add a field, change `types.ts` **and**
+backfill every seed record (TypeScript will flag the gaps). When persistence
+arrives, port this model into the backend rather than redefining it.
 
 ## How authentication works
 
@@ -110,6 +140,16 @@ that env var to `""` to disable the audience check.
 
 ## Developing
 
+**First-time setup** (once per clone) — installs the pre-commit hooks, frontend
+deps, and the Playwright browser used by the project's MCP tooling:
+
+```bash
+make setup
+```
+
+This repo also ships a tailored Claude Code setup (context guides, hooks, local
+review agents, the `/scaffold-page` skill, pinned MCP servers); see `CLAUDE.md`.
+
 Both app containers hot-reload from bind mounts:
 
 - **Frontend** — edit `frontend/src/**`; Vite HMR updates the browser.
@@ -139,7 +179,8 @@ cd backend && python -m venv .venv && . .venv/bin/activate \
 - **Add an API route**: drop a router in `backend/app/routers/`, include it in
   `main.py`, and protect it with `Depends(get_current_user)`.
 - **Add a page**: add a `pages/Foo.tsx`, then a line to `ROUTES`/`NAV` and a
-  `<Route>` in `frontend/src/App.tsx`.
+  `<Route>` in `frontend/src/App.tsx` — or run the `/scaffold-page` skill, which
+  does all four edits for you.
 - **Require a role**: use `Depends(require_role("admin"))` on a route.
 
 ## Notes & next steps
