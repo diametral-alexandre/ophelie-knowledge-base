@@ -1,0 +1,452 @@
+/* ============================================================================
+   Ophélie shell — sidebar + topbar + search palette.
+
+   Reproduces ophelieV2's bespoke shell look, but every colour resolves to a
+   Diametral token (--ds-*) so the existing Light / Dark / Sepia themes keep
+   working. ophelieV2 → Diametral token map:
+     bg            → --ds-bg
+     bg-2/surface-2→ --ds-bg-alt
+     surface       → --ds-surface
+     border        → --ds-rule
+     ink           → --ds-ink
+     ink-2/muted   → --ds-ink-soft
+     faint         → --ds-ink-faint
+     accent        → --ds-accent
+     accent-tint   → --ds-accent-bg
+   ============================================================================ */
+
+.oph-app {
+  --oph-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  --oph-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --oph-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.08);
+  --oph-shadow-pop: 0 8px 32px rgba(0, 0, 0, 0.14);
+
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+.oph-sidebar {
+  background: var(--ds-bg-alt);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  box-shadow: 1px 0 0 var(--ds-rule);
+}
+.oph-brand {
+  padding: 20px 20px 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.oph-brand-word {
+  font-family: var(--ds-font-title, serif);
+  font-style: italic;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--ds-ink);
+}
+.oph-tagline {
+  padding: 0 20px 12px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ds-ink-faint);
+}
+.oph-nav {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.oph-nav-group {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ds-ink-faint);
+  padding: 12px 10px 4px;
+}
+.oph-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 13px;
+  color: var(--ds-ink-soft);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 80ms ease, color 80ms ease;
+}
+.oph-nav-item:hover {
+  background: color-mix(in srgb, var(--ds-ink) 5%, transparent);
+  color: var(--ds-ink);
+}
+.oph-nav-item.active {
+  color: var(--ds-ink);
+}
+.oph-nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--ds-accent);
+}
+.oph-nav-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+.oph-nav-count {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ds-ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* User menu pinned to the bottom of the rail */
+.oph-user {
+  margin-top: auto;
+  position: relative;
+  box-shadow: 0 -1px 0 var(--ds-rule);
+}
+.oph-user-btn {
+  width: 100%;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+.oph-user-btn:hover {
+  background: var(--ds-surface);
+}
+.oph-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--ds-accent);
+  color: var(--ds-on-accent, #fff);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.oph-user-name {
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ds-ink);
+}
+.oph-user-role {
+  font-size: 11px;
+  color: var(--ds-ink-faint);
+}
+.oph-menu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin: 8px;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-rule);
+  border-radius: 6px;
+  box-shadow: var(--oph-shadow-pop);
+  overflow: hidden;
+  z-index: 30;
+}
+.oph-menu-item {
+  width: 100%;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: none;
+  font-size: 13px;
+  color: var(--ds-ink-soft);
+  text-align: left;
+  cursor: pointer;
+}
+.oph-menu-item:hover {
+  background: var(--ds-bg-alt);
+}
+.oph-menu-item.danger {
+  color: var(--ds-danger, #b4453a);
+  border-top: 1px solid var(--ds-rule);
+}
+
+/* ── Main column ─────────────────────────────────────────────────────────── */
+.oph-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--ds-bg);
+}
+.oph-content {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 28px 64px;
+}
+
+/* ── Topbar ──────────────────────────────────────────────────────────────── */
+.oph-topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--ds-rule);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--ds-bg) 85%, transparent);
+  backdrop-filter: blur(12px);
+}
+.oph-topbar-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* Theme switcher pill group */
+.oph-themes {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  background: var(--ds-bg-alt);
+  border: 1px solid var(--ds-rule);
+  border-radius: 999px;
+}
+.oph-theme-btn {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: capitalize;
+  color: var(--ds-ink-faint);
+  cursor: pointer;
+  transition: color 120ms ease;
+}
+.oph-theme-btn:hover {
+  color: var(--ds-ink);
+}
+.oph-theme-btn.active {
+  background: var(--ds-surface);
+  color: var(--ds-ink);
+  box-shadow: var(--oph-shadow-sm);
+}
+
+/* ── Search palette ──────────────────────────────────────────────────────── */
+.oph-search {
+  position: relative;
+  flex: 1;
+  max-width: 640px;
+}
+.oph-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-rule);
+  border-radius: 6px;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.oph-search-box.open {
+  border-color: var(--ds-ink-faint);
+  box-shadow: 0 0 0 3px var(--ds-accent-bg);
+}
+.oph-search-icon {
+  color: var(--ds-ink-soft);
+  display: flex;
+}
+.oph-search-input {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  color: var(--ds-ink);
+}
+.oph-search-input::placeholder {
+  color: var(--ds-ink-faint);
+}
+.oph-search-clear {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ds-bg-alt);
+  color: var(--ds-ink-faint);
+  cursor: pointer;
+}
+.oph-search-clear:hover {
+  color: var(--ds-ink);
+}
+.oph-kbd {
+  font-family: var(--oph-font-mono);
+  font-size: 10.5px;
+  padding: 2px 6px;
+  background: var(--ds-bg-alt);
+  border: 1px solid var(--ds-rule);
+  border-radius: 4px;
+  color: var(--ds-ink-soft);
+  white-space: nowrap;
+}
+
+.oph-search-pop {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-rule);
+  border-radius: 6px;
+  box-shadow: var(--oph-shadow-md);
+  z-index: 40;
+  max-height: 70vh;
+  overflow: auto;
+  padding: 6px 0;
+}
+.oph-sec + .oph-sec {
+  border-top: 1px solid var(--ds-rule);
+}
+.oph-sec-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px 4px;
+  font-family: var(--oph-font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ds-ink-faint);
+}
+.oph-sec-count {
+  margin-left: auto;
+  font-family: var(--oph-font-mono);
+  font-size: 10.5px;
+  color: var(--ds-ink-faint);
+}
+.oph-recent-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 14px 10px;
+}
+.oph-recent-chip {
+  padding: 4px 10px;
+  border: 1px solid var(--ds-rule);
+  border-radius: 999px;
+  background: var(--ds-bg-alt);
+  color: var(--ds-ink-soft);
+  font-size: 12px;
+  cursor: pointer;
+}
+.oph-recent-chip:hover {
+  border-color: var(--ds-ink-faint);
+  color: var(--ds-ink);
+}
+.oph-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: var(--ds-ink);
+  cursor: pointer;
+}
+.oph-opt:hover,
+.oph-opt.active {
+  background: var(--ds-bg-alt);
+}
+.oph-opt-icon {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--ds-bg-alt);
+  border: 1px solid var(--ds-rule);
+  color: var(--ds-ink-soft);
+  flex-shrink: 0;
+}
+.oph-opt-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+.oph-opt-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ds-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oph-opt-sub {
+  font-size: 11.5px;
+  color: var(--ds-ink-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oph-opt-meta {
+  font-family: var(--oph-font-mono);
+  font-size: 11px;
+  color: var(--ds-ink-faint);
+  flex-shrink: 0;
+}
+.oph-opt-kind {
+  font-family: var(--oph-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ds-ink-faint);
+  padding: 2px 6px;
+  border: 1px solid var(--ds-rule);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.oph-hl {
+  background: var(--ds-accent-bg);
+  color: var(--ds-ink);
+  padding: 0 1px;
+  border-radius: 2px;
+}
+.oph-search-foot {
+  display: flex;
+  gap: 14px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--ds-rule);
+  background: var(--ds-bg-alt);
+  font-size: 11px;
+  color: var(--ds-ink-faint);
+}
+.oph-search-empty {
+  padding: 16px 14px;
+  font-size: 13px;
+  color: var(--ds-ink-faint);
+}

@@ -64,7 +64,7 @@ export default function ClientDetail() {
                     color: "inherit",
                     textDecoration: "none",
                     borderBottom:
-                      i < references.length - 1 ? "1px solid var(--ds-border)" : "none",
+                      i < references.length - 1 ? "1px solid var(--ds-rule)" : "none",
                   }}
                 >
                   <span style={{ fontWeight: 500, fontSize: 13.5 }}>{r.name}</span>

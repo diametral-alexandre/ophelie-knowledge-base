@@ -13,6 +13,9 @@ import "@diametral/design-system/css/diametral.css";
 // into diametral.css, making these lines redundant but harmless).
 import "@diametral/design-system/css/themes/dark.css";
 import "@diametral/design-system/css/themes/sepia.css";
+// The Ophélie shell styles (sidebar + topbar + search palette). Loaded after the
+// Diametral CSS so its classes can rely on the --ds-* tokens being defined.
+import "./shell/shell.css";
 
 import App from "./App";
 import { keycloak } from "./lib/keycloak";

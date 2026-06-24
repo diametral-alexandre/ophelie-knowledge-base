@@ -101,7 +101,7 @@ export default function ConsultantDetail() {
               style={{
                 margin: "16px 0 0",
                 paddingTop: 16,
-                borderTop: "1px solid var(--ds-border)",
+                borderTop: "1px solid var(--ds-rule)",
                 fontSize: 14,
                 lineHeight: 1.65,
                 color: "var(--ds-ink-soft)",
@@ -130,7 +130,7 @@ export default function ConsultantDetail() {
                     gap: 18,
                     padding: "16px 0",
                     borderBottom:
-                      i < refs.length - 1 ? "1px solid var(--ds-border)" : "none",
+                      i < refs.length - 1 ? "1px solid var(--ds-rule)" : "none",
                   }}
                 >
                   <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
@@ -217,7 +217,7 @@ export default function ConsultantDetail() {
                     fontSize: 13.5,
                     padding: "10px 0",
                     borderBottom:
-                      i < c.education.length - 1 ? "1px solid var(--ds-border)" : "none",
+                      i < c.education.length - 1 ? "1px solid var(--ds-rule)" : "none",
                   }}
                 >
                   {e}

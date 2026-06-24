@@ -79,7 +79,7 @@ export default function Profile() {
             { term: "Roles", desc: me.roles.join(", ") || "—" },
           ]}
         />
-        <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--ds-border)" }}>
+        <div style={{ marginTop: 16, paddingTop: 16, borderTop: "1px solid var(--ds-rule)" }}>
           <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--ds-ink-faint)", marginBottom: 8 }}>
             Short bio
           </div>
