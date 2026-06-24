@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   PageHeader,
@@ -6,20 +7,54 @@ import {
   DescriptionList,
 } from "@diametral/design-system/react";
 
-import { getClient, referencesForClient } from "../data";
+import { api } from "../lib/api";
+import type { Client, Mission } from "../lib/types";
 import { Section } from "../lib/resourceUi";
 
 export default function ClientDetail() {
   const { id = "" } = useParams();
-  const client = getClient(id);
+  const [client, setClient] = useState<Client | null>(null);
+  const [missions, setMissions] = useState<Mission[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!client) {
+  useEffect(() => {
+    if (!id) return;
+    setLoading(true);
+    Promise.all([
+      api<Client>(`/api/clients/${id}`),
+      api<Mission[]>(`/api/missions?customer_id=${id}`),
+    ])
+      .then(([c, m]) => {
+        setClient(c);
+        setMissions(m);
+      })
+      .catch((e: Error) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  const backLink = (
+    <Link to="/clients" style={{ color: "var(--ds-ink-soft)", textDecoration: "none" }}>
+      ← Clients
+    </Link>
+  );
+
+  if (loading) {
     return (
       <>
-        <PageHeader title="Client not found" />
+        <PageHeader title="Loading…" breadcrumb={backLink} />
+        <EmptyState title="Loading…" description="Fetching client profile." />
+      </>
+    );
+  }
+
+  if (error || !client) {
+    return (
+      <>
+        <PageHeader title="Client not found" breadcrumb={backLink} />
         <EmptyState
           title="No such client"
-          description="This client doesn't exist or has been removed."
+          description={error ?? "This client doesn't exist or has been removed."}
           actions={
             <Link to="/clients">
               <Button>Back to clients</Button>
@@ -30,53 +65,54 @@ export default function ClientDetail() {
     );
   }
 
-  const references = referencesForClient(client.id);
-
   return (
     <>
       <PageHeader
-        title={client.name}
-        subtitle={client.industry}
-        breadcrumb={
-          <Link to="/clients" style={{ color: "var(--ds-ink-soft)", textDecoration: "none" }}>
-            ← Clients
-          </Link>
-        }
+        title={client.company_name}
+        subtitle={client.sector ?? undefined}
+        breadcrumb={backLink}
       />
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 16, alignItems: "start" }}>
-        <Section title="Engagements" aside={references.length}>
-          {references.length === 0 ? (
+        <Section title="Missions" aside={missions.length}>
+          {missions.length === 0 ? (
             <div style={{ fontSize: 13, color: "var(--ds-ink-faint)" }}>
-              No engagements recorded.
+              No missions recorded.
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column" }}>
-              {references.map((r, i) => (
-                <Link
-                  key={r.id}
-                  to={`/references/${r.id}`}
+              {missions.map((m, i) => (
+                <div
+                  key={m.mission_id}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
+                    alignItems: "baseline",
                     gap: 12,
                     padding: "12px 0",
-                    color: "inherit",
-                    textDecoration: "none",
-                    borderBottom:
-                      i < references.length - 1 ? "1px solid var(--ds-border)" : "none",
+                    borderBottom: i < missions.length - 1 ? "1px solid var(--ds-border)" : "none",
                   }}
                 >
-                  <span style={{ fontWeight: 500, fontSize: 13.5 }}>{r.name}</span>
-                  <span style={{ fontSize: 12, color: "var(--ds-ink-faint)" }}>{r.duration}</span>
-                </Link>
+                  <span style={{ fontWeight: 500, fontSize: 13.5 }}>{m.mission_name}</span>
+                  <span style={{ fontSize: 12, color: "var(--ds-ink-faint)", whiteSpace: "nowrap" }}>
+                    {m.status}
+                  </span>
+                </div>
               ))}
             </div>
           )}
         </Section>
 
         <Section title="Details">
-          <DescriptionList items={[{ term: "Industry", desc: client.industry }]} />
+          <DescriptionList
+            items={[
+              { term: "Sector", desc: client.sector ?? "—" },
+              { term: "Contact", desc: client.contact_name ?? "—" },
+              { term: "Email", desc: client.email ?? "—" },
+              { term: "Phone", desc: client.phone ?? "—" },
+              { term: "Address", desc: client.address ?? "—" },
+            ]}
+          />
         </Section>
       </div>
     </>

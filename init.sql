@@ -54,9 +54,10 @@ INSERT INTO employees (first_name, last_name, email, department, hire_date, prof
 ('Antoine', 'Espinosa', 'aespinosa@diametral.com', 'Cloud Architecture', '2026-02-14', 'https://i.pravatar.cc/150?u=james.oconnor@company.com');
 
 INSERT INTO clients (company_name, contact_name, email, phone, address, sector) VALUES
-('Apex Health Solutions', 'Dr. Robert Chen', 'r.chen@apexhealth.com', '+1-555-0192', '123 Medical Plaza, Boston, MA', 'Healthcare'),
-('Fintech Global Corp', 'Elena Rostova', 'e.rostova@fintechglobal.com', '+1-555-4831', '77 Wall Street, New York, NY', 'Finance'),
-('GreenPulse Energy', 'Marcus Vance', 'm.vance@greenpulse.io', '+1-555-8902', '456 Renewable Way, Austin, TX', 'Energy');
+('ACOR', 'Dr. Robert Chen', 'r.chen@apexhealth.com', '+1-555-0192', '123 Medical Plaza, Boston, MA', 'Healthcare'),
+('Société Générale', 'Elena Rostova', 'e.rostova@fintechglobal.com', '+1-555-4831', '77 Wall Street, New York, NY', 'Finance'),
+('INA', 'Yasser Jequirim', 'e.rostova@fintechglobal.com', '+1-555-4831', 'Bry', 'Media'),
+('ALLIANZ', 'Marcus Vance', 'm.vance@greenpulse.io', '+1-555-8902', '456 Renewable Way, Austin, TX', 'Energy');
 
 INSERT INTO missions (customer_id, mission_name, description, start_date, end_date, status) VALUES
 (1, 'Patient Portal Upgrade', 'Migrating the legacy patient portal to a modern microservices architecture.', '2025-06-01', '2025-12-20', 'Completed'),

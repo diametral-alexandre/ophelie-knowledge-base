@@ -49,6 +49,28 @@ class EmployeeOut(BaseModel):
     profile_image_url: str | None
 
 
+class ClientUpdate(BaseModel):
+    company_name: str | None = Field(default=None, min_length=1, max_length=100)
+    contact_name: str | None = Field(default=None, max_length=100)
+    email: str | None = Field(default=None, max_length=100)
+    phone: str | None = Field(default=None, max_length=20)
+    address: str | None = None
+    sector: str | None = Field(default=None, max_length=30)
+
+
+class ClientOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    customer_id: int
+    company_name: str
+    contact_name: str | None
+    email: str | None
+    phone: str | None
+    address: str | None
+    created_at: datetime
+    sector: str | None
+
+
 class MissionUpdate(BaseModel):
     mission_name: str | None = Field(default=None, min_length=1, max_length=150)
     description: str | None = None
@@ -69,6 +91,22 @@ class MissionOut(BaseModel):
     status: str
 
 
+class EmployeeReferenceOut(BaseModel):
+    """Denormalised reference row seen from an employee's profile."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    reference_id: int
+    role_description: str | None
+    skill_id: int
+    skill_name: str
+    mission_id: int
+    mission_name: str
+    status: str
+    start_date: date | None
+    end_date: date | None
+
+
 class ReferenceUpdate(BaseModel):
     employee_id: int | None = None
     mission_id: int | None = None
@@ -84,6 +122,21 @@ class ReferenceOut(BaseModel):
     mission_id: int
     skill_id: int
     role_description: str | None
+
+
+class ReferenceRowOut(BaseModel):
+    """Denormalised junction row: reference + employee fields + skill name."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    reference_id: int
+    role_description: str | None
+    employee_id: int | None
+    first_name: str | None
+    last_name: str | None
+    profile_image_url: str | None
+    skill_id: int
+    skill_name: str
 
 
 class UserOut(BaseModel):

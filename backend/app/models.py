@@ -20,6 +20,19 @@ class Employee(Base):
     profile_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
 
+class Client(Base):
+    __tablename__ = "clients"
+
+    customer_id: Mapped[int] = mapped_column(primary_key=True)
+    company_name: Mapped[str] = mapped_column(String(100))
+    contact_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    email: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    phone: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    address: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=False), server_default=func.now())
+    sector: Mapped[str | None] = mapped_column(String(30), nullable=True)
+
+
 class Mission(Base):
     __tablename__ = "missions"
 
@@ -40,6 +53,13 @@ class Reference(Base):
     mission_id: Mapped[int] = mapped_column(Integer)
     skill_id: Mapped[int] = mapped_column(Integer)
     role_description: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class Skill(Base):
+    __tablename__ = "skills"
+
+    skill_id: Mapped[int] = mapped_column(primary_key=True)
+    skill_name: Mapped[str] = mapped_column(String(50), unique=True)
 
 
 class Item(Base):
