@@ -27,6 +27,11 @@ def list_employees(db: DB) -> list[Employee]:
     return db.query(Employee).order_by(Employee.last_name, Employee.first_name).all()
 
 
+@router.get("/{employee_id}", response_model=EmployeeOut, dependencies=[Depends(get_current_user)])
+def get_employee(employee_id: int, db: DB) -> Employee:
+    return _get_or_404(employee_id, db)
+
+
 @router.patch("/{employee_id}", response_model=EmployeeOut, dependencies=[Depends(require_role("admin"))])
 def update_employee(employee_id: int, payload: EmployeeUpdate, db: DB) -> Employee:
     employee = _get_or_404(employee_id, db)
