@@ -58,7 +58,7 @@ export default function ReferenceDetail() {
                     alignItems: "center",
                     padding: "12px 0",
                     borderBottom:
-                      i < r.outcomes.length - 1 ? "1px solid var(--ds-border)" : "none",
+                      i < r.outcomes.length - 1 ? "1px solid var(--ds-rule)" : "none",
                   }}
                 >
                   <span style={{ color: "var(--ds-accent, var(--ds-ink))" }}>✓</span>
@@ -84,7 +84,7 @@ export default function ReferenceDetail() {
                       padding: "8px 0",
                       color: "inherit",
                       textDecoration: "none",
-                      borderBottom: "1px solid var(--ds-border)",
+                      borderBottom: "1px solid var(--ds-rule)",
                     }}
                   >
                     <PersonHead initials={c.initials} name={c.name} sub={c.title} />
