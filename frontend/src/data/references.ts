@@ -1,0 +1,162 @@
+import type { Reference } from "./types";
+
+// Seed references (the firm's delivered missions) — ported from ophelieV2.
+// Each carries the consultants who delivered it and the client it was for;
+// the Library derives the Client list from these.
+export const REFERENCES: Reference[] = [
+  {
+    id: "m-001",
+    name: "BNP — Core Banking Cloud Migration",
+    client: "BNP Paribas",
+    industry: "Banking",
+    duration: "Jan 2023 – Oct 2024",
+    size: "€3.4M",
+    team: 14,
+    role: "Lead Architect",
+    summary:
+      "Re-platformed three core banking products from on-prem WebSphere to AWS EKS with strangler-pattern rewrites. Cut release cycle from 6 weeks to 2 days.",
+    skills: ["AWS", "Kubernetes", "Java", "Event-driven"],
+    consultants: ["c-001", "c-006"],
+    outcomes: [
+      "30× faster release cadence",
+      "€2.1M annual infra savings",
+      "Zero P1 incidents in first 6 months post-cutover",
+    ],
+  },
+  {
+    id: "m-002",
+    name: "Carrefour — Personalization Platform",
+    client: "Carrefour",
+    industry: "Retail",
+    duration: "Apr 2024 – present",
+    size: "€1.8M",
+    team: 8,
+    role: "Data & MLOps Lead",
+    summary:
+      "Built a real-time personalization layer on Databricks + Snowflake feeding recommendations into the mobile app and email channels.",
+    skills: ["Databricks", "Snowflake", "MLOps", "Personalization"],
+    consultants: ["c-002", "c-007"],
+    outcomes: [
+      "+18% email CTR",
+      "Recos served at p99 < 80ms",
+      "Model registry with full lineage",
+    ],
+  },
+  {
+    id: "m-003",
+    name: "Intesa — NIS2 Compliance Programme",
+    client: "Intesa Sanpaolo",
+    industry: "Banking",
+    duration: "Sep 2024 – Jul 2025",
+    size: "€2.1M",
+    team: 11,
+    role: "Security Workstream Lead",
+    summary:
+      "End-to-end NIS2 readiness across 9 business lines, including tabletop exercises and a refresh of the SOC playbook.",
+    skills: ["NIS2", "ISO 27001", "SOC", "IAM"],
+    consultants: ["c-003"],
+    outcomes: ["Passed regulator audit at first attempt", "SOC MTTR halved"],
+  },
+  {
+    id: "m-004",
+    name: "AXA — Platform Engineering Practice",
+    client: "AXA",
+    industry: "Insurance",
+    duration: "Jun 2022 – Mar 2023",
+    size: "€900k",
+    team: 5,
+    role: "Architecture Lead",
+    summary:
+      "Stood up an internal developer platform with golden paths for Java + Node services, reducing time-to-first-prod from 6 weeks to 4 days.",
+    skills: ["Backstage", "Kubernetes", "Terraform", "DevEx"],
+    consultants: ["c-001"],
+    outcomes: [
+      "Time-to-prod 6w → 4d",
+      "Self-serve onboarding for 200+ engineers",
+    ],
+  },
+  {
+    id: "m-005",
+    name: "Orange — Customer 360 LLM Assistant",
+    client: "Orange",
+    industry: "Telco",
+    duration: "Nov 2024 – present",
+    size: "€1.2M",
+    team: 6,
+    role: "ML Lead",
+    summary:
+      "Production-grade RAG over CRM + billing for agent-assist. Strict evals, fallback to humans, observable everything.",
+    skills: ["LLM", "RAG", "Vector DB", "Evals"],
+    consultants: ["c-002"],
+    outcomes: ["AHT reduced 22%", "Hallucination rate < 1.2% on weekly eval"],
+  },
+  {
+    id: "m-006",
+    name: "Safran — S/4HANA Greenfield",
+    client: "Safran",
+    industry: "Aerospace",
+    duration: "Feb 2023 – Dec 2024",
+    size: "€4.7M",
+    team: 22,
+    role: "FI/CO Stream",
+    summary:
+      "Greenfield S/4HANA rollout across 4 entities with parallel BTP integration to legacy MES.",
+    skills: ["SAP S/4HANA", "FI/CO", "BTP"],
+    consultants: ["c-004"],
+    outcomes: ["On time, on budget", "11-country rollout"],
+  },
+  {
+    id: "m-007",
+    name: "John Lewis — Loyalty Programme Redesign",
+    client: "John Lewis Partnership",
+    industry: "Retail",
+    duration: "Jan 2024 – Aug 2024",
+    size: "€600k",
+    team: 4,
+    role: "Product Strategy",
+    summary:
+      "Re-thought a 30-year-old loyalty programme from first principles. Two-week sprint cadence with weekly partner steerco.",
+    skills: ["Product Strategy", "Service Design", "Research"],
+    consultants: ["c-005"],
+    outcomes: [
+      "New programme launched Sep 2024",
+      "Member acquisition +34% in Q1",
+    ],
+  },
+  {
+    id: "m-008",
+    name: "Deutsche Telekom — SRE Practice Build",
+    client: "Deutsche Telekom",
+    industry: "Telco",
+    duration: "Mar 2022 – Feb 2024",
+    size: "€2.8M",
+    team: 9,
+    role: "SRE Practice Lead",
+    summary:
+      "Built and scaled an SRE practice across 6 product groups. Error budgets and SLOs as first-class governance artefacts.",
+    skills: ["SRE", "Observability", "GCP", "Chaos Engineering"],
+    consultants: ["c-006", "c-008"],
+    outcomes: [
+      "SLO coverage 0% → 84%",
+      "Two MTTR-halving incident retros baked into training",
+    ],
+  },
+  {
+    id: "m-009",
+    name: "Allianz — M&A Tech Integration",
+    client: "Allianz",
+    industry: "Insurance",
+    duration: "Jul 2023 – Apr 2024",
+    size: "€2.4M",
+    team: 12,
+    role: "Integration Architect",
+    summary:
+      "Day-one and day-100 integration plan for a €1.2bn acquisition. Pragmatic, not theoretical: legacy stays legacy where it should.",
+    skills: ["EA", "Modernization", "M&A Integration"],
+    consultants: ["c-001", "c-008"],
+    outcomes: [
+      "Day-1 hit with zero customer impact",
+      "Day-100 milestones cleared on schedule",
+    ],
+  },
+];
