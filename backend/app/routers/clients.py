@@ -32,7 +32,9 @@ def get_client(client_id: int, db: DB) -> Client:
     return _get_or_404(client_id, db)
 
 
-@router.patch("/{client_id}", response_model=ClientOut, dependencies=[Depends(require_role("admin"))])
+@router.patch(
+    "/{client_id}", response_model=ClientOut, dependencies=[Depends(require_role("admin"))]
+)
 def update_client(client_id: int, payload: ClientUpdate, db: DB) -> Client:
     client = _get_or_404(client_id, db)
     for key, value in payload.model_dump(exclude_unset=True).items():
@@ -42,7 +44,11 @@ def update_client(client_id: int, payload: ClientUpdate, db: DB) -> Client:
     return client
 
 
-@router.delete("/{client_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_role("admin"))])
+@router.delete(
+    "/{client_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(require_role("admin"))],
+)
 def delete_client(client_id: int, db: DB) -> None:
     client = _get_or_404(client_id, db)
     db.delete(client)

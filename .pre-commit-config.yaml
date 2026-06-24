@@ -31,11 +31,24 @@ repos:
         files: ^backend/
       - id: ruff-format     # format
         files: ^backend/
-      # pre-push: lint the whole backend (not just changed files), reusing the
-      # managed ruff env so no system install is required.
+      # pre-push: lint+autofix the whole backend (not just changed files),
+      # reusing the managed ruff env so no system install is required. --fix
+      # rewrites files in place; if it fixes anything the push aborts (non-zero
+      # exit) so you can review and commit the fixes before re-pushing.
       - id: ruff-check
         alias: ruff-check-all
-        name: ruff check (full backend, pre-push)
+        name: ruff check --fix (full backend, pre-push)
+        args: [--fix, backend]
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
+      # pre-push: format the whole backend too. The formatter is what wraps
+      # long lines (E501) that `ruff check --fix` leaves alone — long decorator
+      # signatures, call args, column defs. Rewrites in place; aborts the push
+      # if anything changed so you can commit the result.
+      - id: ruff-format
+        alias: ruff-format-all
+        name: ruff format (full backend, pre-push)
         args: [backend]
         pass_filenames: false
         always_run: true

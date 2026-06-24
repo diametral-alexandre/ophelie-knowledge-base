@@ -25,26 +25,30 @@ def _get_or_404(reference_id: int, db: Session) -> Reference:
 
 @router.get("", response_model=list[ReferenceListOut], dependencies=[Depends(get_current_user)])
 def list_references(db: DB):
-    rows = db.execute(
-        select(
-            Reference.reference_id,
-            Reference.employee_id,
-            Reference.role_description,
-            Employee.first_name,
-            Employee.last_name,
-            Employee.profile_image_url,
-            Mission.mission_id,
-            Mission.mission_name,
-            Mission.status,
-            Client.company_name,
-            Skill.skill_name,
+    rows = (
+        db.execute(
+            select(
+                Reference.reference_id,
+                Reference.employee_id,
+                Reference.role_description,
+                Employee.first_name,
+                Employee.last_name,
+                Employee.profile_image_url,
+                Mission.mission_id,
+                Mission.mission_name,
+                Mission.status,
+                Client.company_name,
+                Skill.skill_name,
+            )
+            .outerjoin(Employee, Reference.employee_id == Employee.employee_id)
+            .join(Mission, Reference.mission_id == Mission.mission_id)
+            .join(Client, Mission.customer_id == Client.customer_id)
+            .join(Skill, Reference.skill_id == Skill.skill_id)
+            .order_by(Employee.last_name, Employee.first_name, Mission.mission_id)
         )
-        .outerjoin(Employee, Reference.employee_id == Employee.employee_id)
-        .join(Mission, Reference.mission_id == Mission.mission_id)
-        .join(Client, Mission.customer_id == Client.customer_id)
-        .join(Skill, Reference.skill_id == Skill.skill_id)
-        .order_by(Employee.last_name, Employee.first_name, Mission.mission_id)
-    ).mappings().all()
+        .mappings()
+        .all()
+    )
     return [ReferenceListOut.model_validate(dict(r)) for r in rows]
 
 

@@ -7,7 +7,8 @@ import { Brandmark } from "./Brandmark";
 // The full-width top bar — the Ophélie brand wordmark on the left, the search
 // palette centred, and the Light/Dark/Sepia theme switcher on the right (same
 // pill look as ophelieV2's language switcher). The theme control replaces the
-// one ConsoleLayout used to provide.
+// one ConsoleLayout used to provide. The rail's collapse trigger lives in the
+// sidebar itself (and ⌘B), not here.
 export function Topbar() {
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ export function Topbar() {
         <span className="oph-brand-divider" aria-hidden="true" />
         <span className="oph-brand-tag">Knowledge Base</span>
       </button>
+
       <div className="oph-topbar-center">
         <SearchPalette placeholder="Search consultants, references, clients…" />
       </div>

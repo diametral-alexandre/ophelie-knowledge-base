@@ -117,83 +117,130 @@
   flex-shrink: 0;
 }
 
-/* Rail foot (collapse toggle) — pushed to the bottom; the user widget sits
-   directly beneath it. */
-.oph-rail-foot {
-  margin-top: auto;
-  padding: 4px 12px 6px;
-}
-.oph-collapse-btn {
+/* Collapsible item: the label button + a fold caret share one row. */
+.oph-nav-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 6px 10px;
+  border-radius: 6px;
+}
+.oph-nav-item--parent {
+  flex: 1;
+  min-width: 0;
+}
+.oph-nav-caret {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  padding: 0 8px;
+  align-self: stretch;
   border: 0;
   border-radius: 6px;
   background: none;
-  font-family: inherit;
-  font-size: 12px;
   color: var(--ds-ink-faint);
+  cursor: pointer;
+  transition: color 80ms ease;
+}
+.oph-nav-caret:hover {
+  color: var(--ds-ink);
+}
+.oph-nav-caret svg {
+  transition: transform 150ms ease;
+}
+.oph-nav-caret.open svg {
+  transform: rotate(90deg);
+}
+
+/* Sub-items: indented under the parent with a connecting rule on the left. */
+.oph-subnav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 1px 0 3px 23px;
+  padding-left: 11px;
+  border-left: 1px solid var(--ds-rule);
+}
+.oph-subitem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 5px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 12.5px;
+  color: var(--ds-ink-soft);
   text-align: left;
   cursor: pointer;
   transition: background-color 80ms ease, color 80ms ease;
 }
-.oph-collapse-btn:hover {
+.oph-subitem:hover {
   background: color-mix(in srgb, var(--ds-ink) 5%, transparent);
   color: var(--ds-ink);
 }
-.oph-collapse-icon {
-  transition: transform 180ms ease;
+.oph-subitem.active {
+  color: var(--ds-ink);
+  font-weight: 500;
 }
-.oph-app.collapsed .oph-collapse-icon {
-  transform: rotate(180deg);
+/* Active sub-item lights its segment of the connecting rule. */
+.oph-subitem.active::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 3px;
+  bottom: 3px;
+  width: 1px;
+  background: var(--ds-accent);
 }
 
-/* User menu pinned to the bottom of the rail */
+/* User profile section pinned to the bottom of the rail (sidebar-07's NavUser).
+   `margin-top: auto` pushes it down now that the in-rail collapse button is
+   gone (the rail is toggled from the topbar trigger instead). */
 .oph-user {
   position: relative;
   box-shadow: 0 -1px 0 var(--ds-rule);
 }
-.oph-user-row {
-  display: flex;
-  align-items: stretch;
-}
 .oph-user-main {
-  flex: 1;
-  min-width: 0;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px;
+  width: 100%;
+  padding: 12px 14px;
   border: 0;
   background: none;
   text-align: left;
   cursor: pointer;
   transition: background-color 120ms ease;
 }
-.oph-user-toggle {
-  display: grid;
-  place-items: center;
-  padding: 0 12px;
-  border: 0;
-  background: none;
-  color: var(--ds-ink-soft);
-  cursor: pointer;
-  transition: background-color 120ms ease, color 120ms ease;
-}
-.oph-user-main:hover,
-.oph-user-toggle:hover {
+.oph-user-main:hover {
   background: color-mix(in srgb, var(--ds-ink) 4%, transparent);
 }
 .oph-user-name {
   font-weight: 500;
   font-size: 13px;
   color: var(--ds-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .oph-user-role {
   font-size: 11px;
   color: var(--ds-ink-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* The ⇕ trigger affordance — two chevrons stacked tight. */
+.oph-chevrons {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--ds-ink-faint);
+}
+.oph-chevrons svg {
+  display: block;
+  margin: -2px 0;
 }
 /* Positioning only — the surface/items come from Diametral's .ds-menu. */
 .oph-menu {
@@ -211,18 +258,17 @@
   padding: 8px;
 }
 .oph-app.collapsed .oph-nav-item,
-.oph-app.collapsed .oph-collapse-btn {
+.oph-app.collapsed .oph-collapse {
   justify-content: center;
   gap: 0;
   padding: 8px;
 }
 .oph-app.collapsed .oph-nav-label,
 .oph-app.collapsed .oph-user-text,
-.oph-app.collapsed .oph-user-toggle {
+.oph-app.collapsed .oph-user-caret,
+.oph-app.collapsed .oph-subnav,
+.oph-app.collapsed .oph-nav-caret {
   display: none;
-}
-.oph-app.collapsed .oph-rail-foot {
-  padding: 4px 8px 6px;
 }
 .oph-app.collapsed .oph-user-main {
   justify-content: center;
@@ -240,7 +286,7 @@
    stays on the button via aria-label). Inverted ink-on-bg so it reads against
    the rail under every theme. */
 .oph-app.collapsed .oph-nav-item::after,
-.oph-app.collapsed .oph-collapse-btn::after {
+.oph-app.collapsed .oph-collapse::after {
   content: attr(data-label);
   position: absolute;
   left: calc(100% + 8px);
@@ -260,17 +306,16 @@
   z-index: 50;
 }
 .oph-app.collapsed .oph-nav-item:hover::after,
-.oph-app.collapsed .oph-collapse-btn:hover::after {
+.oph-app.collapsed .oph-collapse:hover::after {
   opacity: 1;
   transform: translateY(-50%) scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .oph-app,
-  .oph-collapse-icon,
   .oph-group-chevron,
-  .oph-app.collapsed .oph-nav-item::after,
-  .oph-app.collapsed .oph-collapse-btn::after {
+  .oph-nav-caret svg,
+  .oph-app.collapsed .oph-nav-item::after {
     transition: none;
   }
 }
@@ -327,6 +372,31 @@
   text-transform: uppercase;
   color: var(--ds-ink-faint);
 }
+/* In-rail collapse control (sidebar-07's SidebarRail) — pinned to the rail's
+   foot just above the user widget (`margin-top: auto` claims the free space, so
+   `.oph-user` no longer needs it). Muted utility styling; shares the rail's
+   icon/label collapse behavior via .oph-nav-icon / .oph-nav-label. */
+.oph-collapse {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: auto;
+  padding: 10px 14px;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--ds-ink-faint);
+  cursor: pointer;
+  transition: background-color 80ms ease, color 80ms ease;
+}
+.oph-collapse:hover {
+  background: color-mix(in srgb, var(--ds-ink) 4%, transparent);
+  color: var(--ds-ink);
+}
+
 .oph-topbar-center {
   flex: 1;
   display: flex;
